@@ -2,36 +2,45 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Services\PostService;
 use Exception;
+
 use Illuminate\Http\Request;
-use nApp\Http\Services\LikeService;
+use App\Http\Services\PostService;
+use App\Http\Services\LikeService;
 
 class LikeController extends Controller
 {
+
+
     public function __construct(public LikeService $like_service)
     {
 
     }
 
-    public function create(Request $request,PostService $post_service,$id){
+    public function create(Request $request,$likeable_type,$likeable_id){
 
         try{
 
-            $this->like_service->create($post_service,$id);
+            $this->like_service->create($likeable_type,$likeable_id);
 
+            return $this->returnSuccessMessage('Like is done');
         }catch(Exception $exception){
 
-            $this->returnErrorMessage($exception->getMessage());
+            return $this->returnErrorMessage($exception->getMessage());
         }
     }
 
     public function delete(Request $request,$id){
         try{
+            $like = $this->like_service->get($id);
+            $this->authorize('forceDelete',$like);
+            $this->like_service->delete($like);
+
+            return $this->returnSuccessMessage('Unlike is done');
 
         }catch(Exception $exception){
-            
-            $this->returnErrorMessage($exception->getMessage());
+
+           return  $this->returnErrorMessage($exception->getMessage());
 
         }
 

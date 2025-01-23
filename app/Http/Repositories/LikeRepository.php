@@ -1,24 +1,37 @@
 <?php
 namespace App\Http\Repositories;
 
+use App\Models\Like;
 use App\Models\Post;
-
+use App\Models\SharedPost;
 
 class LikeRepository{
 
-    public function create(Post $post){
-        return $post->likes()->create([
+    public function create($likeable){
+        return $likeable->likes()->create([
             'user_id' => auth()->id(),
         ]);
 
     }
 
-    public function delete(post $post){
-        return $post->likes()->where('user_id',auth()->id())->delete();
+
+
+    public function get(int $id){
+        return Like::findOrFail($id);
     }
 
-    public function checkIfExists(Post $post){
-        return $post->likes()->where('user_id',auth()->id())->exists();
+    public function delete(Like $like){
+        return $like->delete();
+    }
+
+    public function checkIfExists($likeable){
+        return $likeable->likes()->userLike()->exists();
+    }
+
+    public function getLikeable($likeable,$id){
+
+        return $likeable::findOrFail($id);
+
     }
 
 
