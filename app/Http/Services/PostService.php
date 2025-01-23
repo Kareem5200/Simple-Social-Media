@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Resources\PostResource;
 use App\Http\Repositories\PostRepository;
 use Exception;
-use PHPUnit\Event\Code\Throwable;
 
 class PostService{
 

@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\LikeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -64,6 +65,11 @@ Route::middleware('auth')->group(function(){
         });
 
 
+    });
+
+    Route::controller(LikeController::class)->middleware('checkPostID')->group(function(){
+        Route::post('like/{id}','create');
+        Route::delete('unlike/{id}','delete');
     });
 
 
