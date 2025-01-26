@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Requests\Post;
+namespace App\Http\Requests\Profile;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateTextPostRequest extends FormRequest
+class UpdateBioRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,7 +22,7 @@ class UpdateTextPostRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'content'=>['required','string'],
+            'bio'=>['required','string','max:255'],
         ];
     }
 }

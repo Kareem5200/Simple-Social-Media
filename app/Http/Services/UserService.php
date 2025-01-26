@@ -1,10 +1,12 @@
 <?php
 namespace App\Http\Services;
 
+use Exception;
 use App\Models\User;
+use App\Http\Resources\UserResource;
+use Illuminate\Support\Facades\Hash;
 use App\Http\Repositories\UserRepository;
 use App\Http\Requests\AuthRequests\RegisterRequest;
-use App\Http\Resources\UserResource;
 
 class UserService{
 
@@ -27,17 +29,33 @@ class UserService{
 
 
     //Update user data
-    public function update(array $data){
+    public function updateBio(array $data){
 
-        if(array_key_exists('profile_image',$data)){
+        return $this->user_repository->update($data);
+    }
+
+    public function updateImage(array $data){
 
             $data = checkUploadedFile($data,'profile_image','/public/profile_images');
             if(!$data){
-                return false;
+                throw new Exception('Error in uploading file');
             }
+            return $this->user_repository->update($data);
+
+
+    }
+
+    public function updatePassword(array $data){
+
+        if(!Hash::check($data['old_password'],auth()->user()->password)) {
+                throw new Exception('wrong old password');
         }
 
-        return $this->user_repository->update($data,auth()->user(),);
+        unset($data['old_password']);
+        return $this->user_repository->update($data);
+
+
+
     }
 
 

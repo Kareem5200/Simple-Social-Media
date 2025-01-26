@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Post;
+namespace App\Http\Requests\Profile;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateImagePostRequest extends FormRequest
+class UpdateProfileImageRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,8 +22,7 @@ class CreateImagePostRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'caption'=>['nullable','string'],
-            'content'=>['required','image','mimes:png,jpg','max:2048'],
+            'profile_image'=>['required','image','mimes:png,jpg','max:2048']
         ];
     }
 }

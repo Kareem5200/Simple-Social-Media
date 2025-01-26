@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\LikeController;
+use App\Http\Controllers\SharePostController;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,8 +45,9 @@ Route::middleware('auth')->group(function(){
 
     Route::controller(ProfileController::class)->group(function(){
         Route::get('/profile/{user}','profile');
-        Route::post('/edit-bio','editBio');
-        Route::post('/edit-image','editProfileImage');
+        Route::post('/update-bio','updateBio');
+        Route::post('/update-image','updateProfileImage');
+        Route::post('/update-password','updatePassword');
     });
 
     Route::controller(PostController::class)->group(function(){
@@ -70,6 +72,14 @@ Route::middleware('auth')->group(function(){
     Route::controller(LikeController::class)->group(function(){
         Route::post('like/{likeable_type}/{likeable_id}','create');
         Route::delete('unlike/{id}','delete');
+    });
+
+    Route::controller(SharePostController::class)->group(function(){
+        Route::post('share-post/{id}','create')->middleware('checkPostID');
+        Route::delete('delete-share-post/{id}','delete');
+        Route::patch('update-share-post/{id}','update');
+        Route::get('get-share-post/{id}','get');
+        Route::get('get-share-posts/{user_id}','getUserPosts');
     });
 
 

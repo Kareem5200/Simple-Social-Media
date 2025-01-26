@@ -14,8 +14,8 @@ class UserRepository{
         return User::create($data);
     }
 
-    public function update(array $data,object $object){
-        return $object->update($data);
+    public function update(array $data){
+        return auth()->user()->update($data);
     }
 
 

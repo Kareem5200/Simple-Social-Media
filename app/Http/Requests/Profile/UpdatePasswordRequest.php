@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Requests\Post;
+namespace App\Http\Requests\Profile;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Password;
 
-class ConvertMediaToTextPostRequest extends FormRequest
+class UpdatePasswordRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,7 +23,8 @@ class ConvertMediaToTextPostRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'content'=>['required','string'],
+            'old_password'=>['required','string'],
+            'password'=>['required','confirmed',Password::min(8)->mixedCase()->numbers()->uncompromised()],
         ];
     }
 }

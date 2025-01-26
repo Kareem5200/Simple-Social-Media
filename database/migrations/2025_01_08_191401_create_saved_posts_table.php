@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('saved_posts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('post_id')->constrained('posts')->cascadeOnDelete();
+            $table->morphs('saveable');
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->timestamps();
         });

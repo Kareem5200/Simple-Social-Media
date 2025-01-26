@@ -36,8 +36,10 @@ class Post extends Model
     public function sharedPosts(){
         return $this->hasMany(SharedPost::class,'post_id');
     }
+
+
     public function savedPosts(){
-        return $this->hasMany(SavedPost::class,'post_id');
+        return $this->morphMany(SavedPost::class,'saveable');
     }
 
     public function postable(){
@@ -45,7 +47,14 @@ class Post extends Model
     }
 
     public function scopePostData($builder){
-        return $builder->with(['user:id,name,profile_image','postable','comments.user:id,name,profile_image','likes.user'])->withCount(['comments','sharedPosts','likes']);
+        return $builder->with([
+        'user:id,name,profile_image',
+        'postable',
+        'comments',
+        'comments.user:id,name,profile_image',
+        'comments.likes',
+        'likes.user:id,name,profile_image'
+        ])->withCount(['comments','sharedPosts','likes']);
     }
 
     protected static function boot()

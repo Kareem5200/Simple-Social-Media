@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Profile;
+namespace App\Http\Requests\Post;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class EditBioRequest extends FormRequest
+class UpdateImagePostRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,7 +22,8 @@ class EditBioRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'bio'=>['required','string','max:255'],
+            'caption'=>['nullable','string'],
+            'content'=>['required','image','mimes:png,jpg','max:2048'],
         ];
     }
 }

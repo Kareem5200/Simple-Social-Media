@@ -7,10 +7,10 @@ use App\Http\Services\PostService;
 use App\Http\Resources\PostResource;
 use App\Http\Requests\Post\CreateTextPostRequest;
 use App\Http\Requests\Post\CreateImagePostRequest;
-use App\Http\Requests\Requests\Post\ConvertMediaToTextPostRequest;
-use App\Http\Requests\Requests\Post\ConvertTextToImagePostRequest;
-use App\Http\Requests\Requests\Post\UpdateImagePostRequest;
-use App\Http\Requests\Requests\Post\UpdateTextPostRequest;
+use App\Http\Requests\Post\ConvertMediaToTextPostRequest;
+use App\Http\Requests\Post\ConvertTextToImagePostRequest;
+use App\Http\Requests\Post\UpdateImagePostRequest;
+use App\Http\Requests\Post\UpdateTextPostRequest;
 use Exception;
 
 class PostController extends Controller
@@ -75,7 +75,7 @@ class PostController extends Controller
 
         }catch(Exception $exception){
 
-            return $this->returnErrorMessage($this->error_message);
+            return $exception;
 
         }
     }

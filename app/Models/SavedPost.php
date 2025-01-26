@@ -20,8 +20,8 @@ class SavedPost extends Model
         return $this->BelongsTo(User::class,'user_id');
     }
 
-    public function post(){
-        return $this->BelongsTo(Post::class,'post_id');
+    public function saveable(){
+        return $this->morphTo();
     }
 
 }

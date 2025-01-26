@@ -4,7 +4,7 @@ namespace App\Http\Requests\Post;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateTextPostRequest extends FormRequest
+class ConvertMediaToTextPostRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

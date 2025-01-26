@@ -1,0 +1,70 @@
+<?php
+
+namespace App\Policies;
+
+use App\Models\SharedPost;
+use App\Models\User;
+use Illuminate\Auth\Access\Response;
+
+class SharedPostPolicy
+{
+
+    private function checkUserPost($user,$post):bool{
+        return $user->id == $post->user_id;
+    }
+    /**
+     * Determine whether the user can view any models.
+     */
+    public function viewAny(User $user): bool
+    {
+        //
+    }
+
+    /**
+     * Determine whether the user can view the model.
+     */
+    public function view(User $user, SharedPost $sharedPost): bool
+    {
+        //
+    }
+
+    /**
+     * Determine whether the user can create models.
+     */
+    public function create(User $user): bool
+    {
+        //
+    }
+
+    /**
+     * Determine whether the user can update the model.
+     */
+    public function update(User $user, SharedPost $sharedPost): bool
+    {
+        return $this->checkUserPost($user,$sharedPost);
+    }
+
+    /**
+     * Determine whether the user can delete the model.
+     */
+    public function delete(User $user, SharedPost $sharedPost): bool
+    {
+        //
+    }
+
+    /**
+     * Determine whether the user can restore the model.
+     */
+    public function restore(User $user, SharedPost $sharedPost): bool
+    {
+        //
+    }
+
+    /**
+     * Determine whether the user can permanently delete the model.
+     */
+    public function forceDelete(User $user, SharedPost $sharedPost): bool
+    {
+        return $this->checkUserPost($user,$sharedPost);
+    }
+}

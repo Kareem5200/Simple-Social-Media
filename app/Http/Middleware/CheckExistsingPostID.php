@@ -20,7 +20,7 @@ class CheckExistsingPostID
 
         if($id = (int)$request->route('id')){
 
-            if(!Post::withTrashed()->where('id',$id)->exists()){
+            if(!Post::where('id',$id)->exists()){
                 return response()->json([
                     'status'=>false,
                     'message'=>'Undefined post',

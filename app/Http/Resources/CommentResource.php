@@ -16,11 +16,11 @@ class CommentResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'user'=>new UserResource($this->user),
             'commentID'=>$this->id,
             'comment'=>$this->comment,
-            'username'=>$this->user->name,
-            'userID'=>$this->user->id,
-            'userImage'=>asset('/storage/profile_images/'.$this->user->profile_image),
+            'likes'=>LikeResource::collection($this->likes),
+            'like_count'=>$this->comment_likes_count,
             'time'=>Carbon::parse($this->created_at)->diffForHumans(),
         ];
     }

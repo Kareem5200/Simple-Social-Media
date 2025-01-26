@@ -15,10 +15,10 @@ class UserResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'userID'=>$this->id,
             'username'=>$this->name,
-            // 'image'=>asset('/storage/profile_images/'.$this->profile_image),
-            'image'=>$this->profile_image,
-            'bio'=>$this->bio,
+            'image'=>asset('/storage/profile_images/'.$this->profile_image),
+            'bio'=>isset($this->bio)?$this->bio:null,
         ];
     }
 }

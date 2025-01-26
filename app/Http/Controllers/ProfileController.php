@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Profile\EditBioRequest;
-use App\Http\Requests\Profile\EditProfileImageRequest;
+use App\Http\Requests\Profile\UpdateBioRequest;
+use App\Http\Requests\Profile\UpdatePasswordRequest;
+use App\Http\Requests\Profile\UpdateProfileImageRequest;
 use App\Http\Services\UserService;
 use App\Models\User;
+use Exception;
 use Illuminate\Contracts\Validation\Rule;
 
 class ProfileController extends Controller
@@ -24,24 +26,36 @@ class ProfileController extends Controller
 
 
     //Edit the user bio
-    public function editBio(EditBioRequest $request){
+    public function updateBio(UpdateBioRequest $request){
 
-        if($this->user_service->update($request->validated())){
-
+        try{
+            $this->user_service->updateBio($request->validated());
             return $this->returnSuccessMessage('Your bio updated successfully');
+        }catch(Exception $exception){
 
-        };
-        return $this->returnErrorMessage('Something wrong');
+            return $this->returnErrorMessage($exception->getMessage());
+        }
     }
 
     //Edit the user profile image
-    public function editProfileImage(EditProfileImageRequest $request){
+    public function updateProfileImage(UpdateProfileImageRequest $request){
 
-        if($this->user_service->update($request->validated())){
-
+        try{
+            $this->user_service->updateImage($request->validated());
             return $this->returnSuccessMessage('Your profile image updated successfully');
-        };
-        return $this->returnErrorMessage('Something wrong');
+        }catch(Exception $exception){
+            return $this->returnErrorMessage($exception->getMessage());
+        }
 
+    }
+
+    public function updatePassword(UpdatePasswordRequest $request){
+
+        try{
+            $this->user_service->updatePassword($request->validated());
+            return $this->returnSuccessMessage('Your password updated successfully');
+        }catch(Exception $exception){
+            return $this->returnErrorMessage($exception->getMessage());
+        }
     }
 }

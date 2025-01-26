@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Requests\Post;
+namespace App\Http\Requests\Post;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateImagePostRequest extends FormRequest
+class CreateSharePostRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,8 +22,7 @@ class UpdateImagePostRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'caption'=>['nullable','string'],
-            'content'=>['required','image','mimes:png,jpg','max:2048'],
+            'caption'=>['sometimes','required','string'],
         ];
     }
 }

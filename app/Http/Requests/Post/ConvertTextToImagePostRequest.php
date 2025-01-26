@@ -4,14 +4,14 @@ namespace App\Http\Requests\Post;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateVideoPostRequest extends FormRequest
+class ConvertTextToImagePostRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,8 @@ class CreateVideoPostRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'caption'=>['nullable','string'],
+            'content'=>['required','image','mimes:png,jpg','max:2048'],
         ];
     }
 }

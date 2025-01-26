@@ -15,10 +15,9 @@ class LikeResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'user'=>new UserResource($this->user),
             'LikeID'=>$this->id,
-            'userID'=>$this->user->id,
-            'username'=>$this->user->name,
-            'userImage'=>asset('/storage/profile_images/'.$this->user->profile_image),
+
         ];
     }
 }
