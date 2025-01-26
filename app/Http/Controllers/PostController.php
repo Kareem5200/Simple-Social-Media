@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use App\Http\Services\PostService;
-use App\Http\Resources\PostResource;
 use App\Http\Requests\Post\CreateTextPostRequest;
 use App\Http\Requests\Post\CreateImagePostRequest;
 use App\Http\Requests\Post\ConvertMediaToTextPostRequest;

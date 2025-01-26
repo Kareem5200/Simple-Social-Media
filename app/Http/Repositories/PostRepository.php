@@ -37,7 +37,7 @@ class PostRepository{
     }
 
     public function getPostWithoutData(int $id){
-        return  Post::find($id);
+        return  Post::findIOrFail($id);
     }
 
 
@@ -63,7 +63,7 @@ class PostRepository{
         return Post::onlyTrashed()->findOrFail($id);
     }
 
-  
+
 
     //soft deletes
     public function restoreSoftDeletedPost(Post $post){
