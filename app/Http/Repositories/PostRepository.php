@@ -37,7 +37,7 @@ class PostRepository{
     }
 
     public function getPostWithoutData(int $id){
-        return  Post::findIOrFail($id);
+        return  Post::findOrFail($id);
     }
 
 

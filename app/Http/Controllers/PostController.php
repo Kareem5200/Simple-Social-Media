@@ -74,7 +74,7 @@ class PostController extends Controller
 
         }catch(Exception $exception){
 
-            return $exception;
+            return $this->returnErrorMessage($exception->getMessage());
 
         }
     }
@@ -157,14 +157,14 @@ class PostController extends Controller
 
     public function makeOnlyMePost($id){
 
-        $post = $this->checkPostAuthorization('delete',$id);
 
         try{
+            $post = $this->checkPostAuthorization('delete',$id);
             $this->post_service->makeOnlyMePost($post);
             return $this->returnSuccessMessage('Post is for you only');
         }catch(Exception $exception){
 
-            return $this->returnErrorMessage($this->error_message);
+            return $this->returnErrorMessage($exception->getMessage());
         }
 
     }
@@ -181,7 +181,7 @@ class PostController extends Controller
 
         }catch(Exception $exception){
 
-            return $this->returnErrorMessage($this->error_message);
+            return $this->returnErrorMessage($exception->getMessage());
         }
 
     }

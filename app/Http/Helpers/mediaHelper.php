@@ -27,9 +27,7 @@ if(!function_exists('checkUploadedFile')){
         if(!$uploaded_image){
             return false;
         }
-        //  $new_path = ;
-        // //  dd(asset($new_path));
-
+    
         $data[$image_name]=$uploaded_image;
         return $data;
     }

@@ -26,4 +26,13 @@ class Comment extends Model
     public function likes(){
         return $this->morphMany(Like::class,'likeable');
     }
+
+
+    protected static function boot(){
+        parent::boot();
+
+        static::deleting(function($comment){
+            $comment->likes()->delete();
+        });
+    }
 }

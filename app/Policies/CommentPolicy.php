@@ -8,6 +8,10 @@ use Illuminate\Auth\Access\Response;
 
 class CommentPolicy
 {
+    private function checkUserComment($user,$comment):bool{
+        return $user->id == $comment->user_id;
+    }
+
     /**
      * Determine whether the user can view any models.
      */
@@ -37,7 +41,7 @@ class CommentPolicy
      */
     public function update(User $user, Comment $comment): bool
     {
-        //
+        return $this->checkUserComment($user,$comment);
     }
 
     /**
@@ -61,6 +65,7 @@ class CommentPolicy
      */
     public function forceDelete(User $user, Comment $comment): bool
     {
-        //
+        return $this->checkUserComment($user,$comment);
+
     }
 }

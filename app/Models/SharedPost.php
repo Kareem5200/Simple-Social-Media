@@ -23,7 +23,14 @@ class SharedPost extends Model
     }
 
     public function post(){
-        return $this->belongsTo(Post::class,'post_id')->with(['user:id,name,profile_image','postable','comments.user:id,name,profile_image','likes.user'])->withCount(['comments','likes']);
+        return $this->belongsTo(Post::class,'post_id')->with([
+            'user:id,name,profile_image',
+            'postable',
+            'comments',
+            'comments.user:id,name,profile_image',
+            'comments.likes',
+            'likes.user:id,name,profile_image'
+            ])->withCount(['comments','sharedPosts','likes']);
     }
 
     public function comments(){
@@ -47,9 +54,7 @@ class SharedPost extends Model
         'comments.user:id,name,profile_image',
         'comments.likes',
         'comments.likes.user:id,name,profile_image',
-        'post'=>function($post){
-        $post->postData();
-        },
+        'post',
         ])->withCount(['comments','likes']);
     }
 
@@ -59,7 +64,8 @@ class SharedPost extends Model
         parent::boot();
 
         static::deleting(function($shared_post){
-            DB::transaction(function ()use($shared_post) {
+
+            DB::transaction(function () use ($shared_post) {
                 $shared_post->likes()->delete();
                 $shared_post->comments()->delete();
             });
