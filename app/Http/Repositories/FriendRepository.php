@@ -12,10 +12,12 @@ class FriendRepository{
     }
 
 
+    //Check if i send this request before
     public function checkSentRequestExists($friend_id){
         return $this->getUser()->sentFriendRequests()->where('friend_id',$friend_id)->exists();
     }
 
+    //check if the user send request to me
     public function checkReceivedRequestExists($user_id){
         return $this->getUser()->receivedFriendRequests()->where('user_id',$user_id)->exists();
     }

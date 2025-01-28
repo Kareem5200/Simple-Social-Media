@@ -3,6 +3,8 @@ namespace App\Http\Services;
 
 use App\Http\Repositories\FriendRepository;
 use App\Http\Repositories\UserRepository;
+use App\Notifications\AcceptFriendNotification;
+use App\Notifications\addFriendNotification;
 use Exception;
 
 class FriendService{
@@ -14,11 +16,17 @@ class FriendService{
     }
 
     public function addFriend($friend_id){
-        if(auth()->id() == $friend_id || $this->friend_repository->checkSentRequestExists($friend_id)){
+
+        if(auth()->id() == $friend_id
+            || $this->friend_repository->checkSentRequestExists($friend_id)
+            || $this->friend_repository->checkReceivedRequestExists($friend_id)){
             throw new Exception('Error in friend ID');
         }
+
+
         $friend = $this->user_repository->getById($friend_id);
-        //then send notification
+        $friend->notify(new addFriendNotification(auth()->user()));
+
         return $this->friend_repository->addFriend($friend_id);
     }
 
@@ -29,7 +37,7 @@ class FriendService{
         }
 
         $user = $this->user_repository->getById($user_id);
-        //then send notification
+        $user->notify(new AcceptFriendNotification(auth()->user()));
         return $this->friend_repository->acceptRequest($user_id);
     }
 
