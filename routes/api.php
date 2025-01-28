@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\FriendController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\SharePostController;
 
@@ -86,6 +87,16 @@ Route::middleware('auth')->group(function(){
         Route::get('get-comment/{id}','get');
         Route::patch('update-comment/{id}','update');
         Route::delete('delete-comment/{id}','delete');
+    });
+
+    Route::controller(FriendController::class)->group(function(){
+
+        Route::post('add-friend/{friend_id}','addFriend');
+        Route::patch('accept-friend/{user_id}','acceptFriendRequest');
+        Route::delete('delete-friendRequest/{user_id}','deleteReceivedFriendRequest');
+
+
+
     });
 
 

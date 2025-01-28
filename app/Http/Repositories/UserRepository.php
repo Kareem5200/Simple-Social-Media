@@ -7,7 +7,7 @@ use CRUDInterface;
 class UserRepository{
 
     public function getById(int $id){
-        return User::find($id);
+        return User::findOrFail($id);
     }
 
     public function create(array $data){

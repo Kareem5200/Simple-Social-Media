@@ -81,7 +81,6 @@ class User extends Authenticatable implements JWTSubject , MustVerifyEmail
         return $this->hasMany(Post::class,'user_id');
     }
 
-  
     public function trashedPosts(){
         return $this->posts()->onlyTrashed();
     }
@@ -97,23 +96,29 @@ class User extends Authenticatable implements JWTSubject , MustVerifyEmail
         return $this->hasMany(Like::class,'user_id');
     }
 
-    public function allFriends()
-    {
-        return $this->belongsToMany(User::class, 'friend_user', 'user_id', 'friend_id')
-                    ->withPivot('status');
+
+
+    public function receivedFriendRequests(){
+        return $this->hasMany(Friendship::class,'friend_id')->whereStatus('pending');
     }
 
-    public function AcceptedFriends(){
-        return $this->allFriends()->wherePivot('status','accepted');
+
+    public function sentFriendRequests(){
+        return $this->hasMany(Friendship::class,'user_id')->whereStatus('pending');
     }
 
-    public function pendingFriends(){
-        return $this->allFriends()->wherePivot('status','pending');
+
+    public function friends(){
+        return $this->belongsToMany(User::class,'friendships','user_id','friend_id')
+                ->wherePivot('status','accepted')
+                ->union(
+                    $this->belongsToMany(User::class,'friendships','friend_id','user_id')
+                    ->wherePivot('status','accepted')
+                    ->toBase()
+                );
     }
 
-    public function blockedFriends(){
-        return $this->allFriends()->wherePivot('status','blocked');
-    }
+
 
 
     public function setPasswordAttribute($password){
