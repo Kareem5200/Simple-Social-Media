@@ -2,6 +2,7 @@
 namespace App\Http\Services;
 
 use App\Http\Repositories\CommentRepository;
+use App\Http\Resources\CommentResource;
 use App\Models\Comment;
 use App\Models\Post;
 use App\Models\SharedPost;
@@ -33,7 +34,7 @@ class CommentService{
     }
 
     public function getWithLikes(int $id){
-        return $this->comment_repository->getWithLikes($id);
+        return new CommentResource($this->comment_repository->getWithLikes($id));
     }
 
 

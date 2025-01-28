@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\SharePostController;
 
@@ -54,7 +55,6 @@ Route::middleware('auth')->group(function(){
 
         Route::post('create-textPost','createTextPost');
         Route::post('create-imagePost','createImagePost');
-         
         Route::get('get-post/{id}','getPost');
         Route::delete('delete-post/{id}','forceDeletePost');
         Route::post('update-textPost/{id}','updateTextPost');
@@ -79,6 +79,13 @@ Route::middleware('auth')->group(function(){
         Route::patch('update-share-post/{id}','update');
         Route::get('get-share-post/{id}','get');
         Route::get('get-share-posts/{user_id}','getUserPosts');
+    });
+
+    Route::controller(CommentController::class)->group(function(){
+        Route::post('create-comment/{commentable_type}/{commentable_id}','create');
+        Route::get('get-comment/{id}','get');
+        Route::patch('update-comment/{id}','update');
+        Route::delete('delete-comment/{id}','delete');
     });
 
 

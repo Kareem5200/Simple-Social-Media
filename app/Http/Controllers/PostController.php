@@ -90,7 +90,7 @@ class PostController extends Controller
             return $this->returnSuccessMessage('Your post deleted succesfully');
         }catch(Exception $exception){
 
-            return $this->returnErrorMessage($this->error_message);
+            return $this->returnErrorMessage($exception->getMessage());
         }
 
 

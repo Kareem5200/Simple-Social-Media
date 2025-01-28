@@ -38,9 +38,6 @@ class Post extends Model
     }
 
 
-    public function savedPosts(){
-        return $this->morphMany(SavedPost::class,'saveable');
-    }
 
     public function postable(){
         return $this->morphTo();
@@ -65,11 +62,14 @@ class Post extends Model
         static::deleting(function ($post) {
 
             DB::transaction(function () use ($post) {
-                $post->comments()->delete();
+                $post->comments()->get()->each(function($comment){
+                    $comment->delete();
+                });
                 $post->likes()->delete();
                 $post->postable()->delete();
-
-                $post->savedPosts()->delete();
+                $post->sharedPosts()->get()->each(function($shared_post){
+                    $shared_post->delete();
+                });
             });
         });
     }

@@ -19,11 +19,12 @@ class CommentRepository{
     }
 
     public function getWithLikes(int $id){
-        return Comment::with(['likes:id,user_id','likes.user:id,name,profile_image'])->withCount('likes')->findOrFail($id);
+        return Comment::with(['likes','likes.user:id,name,profile_image'])->withCount('likes')->findOrFail($id);
     }
 
 
     public function delete($comment){
+        
         return $comment->delete();
     }
 

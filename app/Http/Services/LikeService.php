@@ -42,7 +42,7 @@ class LikeService{
     }
 
     public function delete(Like $like){
-        return $this->delete($like);
+        return $this->like_repository->delete($like);
     }
 
 

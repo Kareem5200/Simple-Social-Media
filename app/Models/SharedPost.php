@@ -41,9 +41,6 @@ class SharedPost extends Model
         return $this->morphMany(Like::class,'likeable');
     }
 
-    public function savedPosts(){
-        return $this->morphMany(SavedPost::class,'saveable');
-    }
 
     public function scopeSharedPostData($builder){
         return $builder->with([
@@ -67,7 +64,9 @@ class SharedPost extends Model
 
             DB::transaction(function () use ($shared_post) {
                 $shared_post->likes()->delete();
-                $shared_post->comments()->delete();
+                $shared_post->comments()->get()->each(function($comment){
+                    $comment->delete();
+                });
             });
         });
 

@@ -20,7 +20,7 @@ class CommentResource extends JsonResource
             'commentID'=>$this->id,
             'comment'=>$this->comment,
             'likes'=>LikeResource::collection($this->likes),
-            'like_count'=>$this->comment_likes_count,
+            'like_count'=>$this->likes_count,
             'time'=>Carbon::parse($this->created_at)->diffForHumans(),
         ];
     }
