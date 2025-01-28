@@ -81,10 +81,7 @@ class User extends Authenticatable implements JWTSubject , MustVerifyEmail
         return $this->hasMany(Post::class,'user_id');
     }
 
-    public function savedPosts(){
-        return $this->hasMany(SavedPost::class,'user_id');
-    }
-
+  
     public function trashedPosts(){
         return $this->posts()->onlyTrashed();
     }
