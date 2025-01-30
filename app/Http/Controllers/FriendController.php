@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Services\FriendService;
 use Exception;
+use App\Models\User;
+use Illuminate\Support\Facades\DB;
+use App\Http\Services\FriendService;
 
 
 
@@ -44,6 +46,7 @@ class FriendController extends Controller
 
     }
 
+
     public function deleteReceivedFriendRequest($user_id){
 
         try{
@@ -56,4 +59,56 @@ class FriendController extends Controller
         }
 
     }
+
+
+    public function cancelSentFriendRequest($friend_id){
+
+        try{
+            $this->friend_service->cancelSentFriendRequest($friend_id);
+            return $this->returnSuccessMessage('Friend request canceled');
+        }catch(Exception $exception){
+
+            return $this->returnErrorMessage($exception->getMessage());
+
+        }
+    }
+    
+
+    public function unfriend($friend_id){
+
+        try{
+
+            $this->friend_service->unfriend($friend_id);
+            return $this->returnSuccessMessage('Unfriend is done');
+
+        }catch(Exception $exception){
+
+            return $this->returnErrorMessage($exception->getMessage());
+
+        }
+
+    }
+
+
+
+    public function getSuggestedFriends(){
+        try{
+
+        }catch(Exception $exception){
+
+        }
+
+    }
+
+
+    public function getFriends($user_id){
+        try{
+
+        }catch(Exception $exception){
+
+        }
+    }
+
+
+
 }

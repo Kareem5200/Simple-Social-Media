@@ -4,6 +4,7 @@ namespace App\Notifications;
 
 use App\Models\User;
 use Illuminate\Bus\Queueable;
+use App\Http\Resources\UserResource;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -22,9 +23,10 @@ class AcceptFriendNotification extends Notification
     public function __construct(public User $user)
     {
         $this->notification_data = [
-            'user_name'=>$this->user->name,
-            'profile_url'=>url('/api/profile',$user->id),
-            'user_image'=>asset('/storage/profile_images/'.$this->user->profile_image),
+            // 'user_name'=>$this->user->name,
+            // 'profile_url'=>url('/api/profile',$user->id),
+            // 'user_image'=>asset('/storage/profile_images/'.$this->user->profile_image),4
+            'user'=>new UserResource($user),
             'body'=>'Your friend request accepted',
         ];
 

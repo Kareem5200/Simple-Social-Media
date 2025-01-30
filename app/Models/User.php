@@ -107,18 +107,17 @@ class User extends Authenticatable implements JWTSubject , MustVerifyEmail
         return $this->hasMany(Friendship::class,'user_id')->whereStatus('pending');
     }
 
-
-    public function friends(){
-        return $this->belongsToMany(User::class,'friendships','user_id','friend_id')
-                ->wherePivot('status','accepted')
-                ->union(
-                    $this->belongsToMany(User::class,'friendships','friend_id','user_id')
-                    ->wherePivot('status','accepted')
-                    ->toBase()
-                );
+    public function addedFriends()
+    {
+        return $this->belongsToMany(User::class, 'friendships', 'user_id', 'friend_id')
+                    ->wherePivot('status', 'accepted');
     }
 
-
+    public function receivedFriends()
+    {
+        return $this->belongsToMany(User::class, 'friendships', 'friend_id', 'user_id')
+                    ->wherePivot('status', 'accepted');
+    }
 
 
     public function setPasswordAttribute($password){

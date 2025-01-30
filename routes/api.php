@@ -94,6 +94,8 @@ Route::middleware('auth')->group(function(){
         Route::post('add-friend/{friend_id}','addFriend');
         Route::patch('accept-friend/{user_id}','acceptFriendRequest');
         Route::delete('delete-friendRequest/{user_id}','deleteReceivedFriendRequest');
+        Route::delete('cancel-sentRequest/{friend_id}','cancelSentFriendRequest');
+        Route::delete('unfriend/{friend_id}','unfriend');
 
 
 
