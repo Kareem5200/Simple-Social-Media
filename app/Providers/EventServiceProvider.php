@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Events\AcceptFriendEvent;
+use App\Events\AddFriendEvent;
+use App\Listeners\AcceptFriendListener;
+use App\Listeners\AddFriendListener;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -18,6 +22,12 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+        AddFriendEvent::class=> [
+            AddFriendListener::class
+        ],
+        AcceptFriendEvent::class => [
+            AcceptFriendListener::class
+        ]
     ];
 
     /**

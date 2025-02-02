@@ -49,7 +49,7 @@ class CommentController extends Controller
 
     }
 
-    
+
     public function delete($id){
         try{
 

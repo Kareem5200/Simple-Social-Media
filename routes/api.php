@@ -47,7 +47,7 @@ Route::middleware('auth')->group(function(){
 
     Route::controller(ProfileController::class)->group(function(){
         Route::get('/profile/{user}','profile');
-        Route::post('/update-bio','updateBio');
+        Route::post('/update-profile','updateprofile');
         Route::post('/update-image','updateProfileImage');
         Route::post('/update-password','updatePassword');
     });
@@ -96,6 +96,8 @@ Route::middleware('auth')->group(function(){
         Route::delete('delete-friendRequest/{user_id}','deleteReceivedFriendRequest');
         Route::delete('cancel-sentRequest/{friend_id}','cancelSentFriendRequest');
         Route::delete('unfriend/{friend_id}','unfriend');
+        Route::get('get-friends/{user_id}','getFriends');
+        Route::get('get-suggestedFriends','getSuggestedFriends');
 
 
 

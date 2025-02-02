@@ -72,7 +72,7 @@ class FriendController extends Controller
 
         }
     }
-    
+
 
     public function unfriend($friend_id){
 
@@ -94,7 +94,11 @@ class FriendController extends Controller
     public function getSuggestedFriends(){
         try{
 
+            $friends = $this->friend_service->getSuggestedFriends();
+            return $this->returnData('Data is returned successfully',$friends);
         }catch(Exception $exception){
+
+            return $this->returnErrorMessage($exception->getMessage());
 
         }
 
@@ -102,9 +106,18 @@ class FriendController extends Controller
 
 
     public function getFriends($user_id){
+        
         try{
 
+            $friends = $this->friend_service->getFriends($user_id);
+            return $this->returnData('Data is returned successfully',[
+                'friends_count'=>$friends->count(),
+                'friends'=>$friends
+            ]);
+
         }catch(Exception $exception){
+
+            return $this->returnErrorMessage($exception->getMessage());
 
         }
     }

@@ -24,6 +24,10 @@ class FriendRepository{
         return $this->getUser()->receivedFriendRequests()->where('user_id',$user_id)->exists();
     }
 
+    public function checkFriendExists($friend_id){
+        return Friendship::where(['user_id'=>auth()->id(),'friend_id'=>$friend_id])->orWhere(['user_id'=>$friend_id,'friend_id'=>auth()->id()])->exists();
+    }
+
 
 
 
@@ -37,22 +41,15 @@ class FriendRepository{
 
     }
 
-
-
-
     public function acceptRequest($user_id){
         return $this->getUser()->receivedFriendRequests()->where('user_id',$user_id)->update([
             'status'=>'accepted',
         ]);
     }
 
-
-
     public function deleteReceivedFriendRequest($user_id){
         return $this->getUser()->receivedFriendRequests()->where('user_id',$user_id)->delete();
     }
-
-
 
     public function cancelSentFriendRequest($friend_id){
         return $this->getUser()->sentFriendRequests()->where('friend_id',$friend_id)->delete();
@@ -62,6 +59,37 @@ class FriendRepository{
         return Friendship::where(['user_id'=>auth()->id(),'friend_id'=>$friend_id,'status'=>'accepted'])
                 ->orWhere(['user_id'=>$friend_id,'friend_id'=>auth()->id(),'status'=>'accepted'])
                 ->delete();
+    }
+
+    public function getFriends($user_id){
+       return User::whereHas('addedFriends', function ($query) use ($user_id) {
+            $query->where('friend_id', $user_id);
+        })
+        ->orWhereHas('receivedFriends', function ($query) use ($user_id) {
+            $query->where('user_id', $user_id);
+        })
+        ->get(['id', 'name', 'profile_image']);
+
+    }
+
+    public function getSuggestedFriends(){
+
+        return User::where('id', '!=', auth()->id())
+        ->whereDoesntHave('addedFriends', function ($query) {
+            $query->where('friend_id', auth()->id());
+        })
+        ->whereDoesntHave('receivedFriends', function ($query) {
+            $query->where('user_id', auth()->id());
+        })
+        ->whereDoesntHave('sentFriendRequests', function ($query) {
+            $query->where('friend_id', auth()->id());
+        })
+        ->whereDoesntHave('receivedFriendRequests', function ($query) {
+            $query->where('user_id', auth()->id());
+        })
+        ->inRandomOrder()
+        ->take(10)
+        ->get(['id', 'name', 'profile_image']);
     }
 
 }

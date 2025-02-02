@@ -20,7 +20,8 @@ class SharePostController extends Controller
             return $this->returnSuccessMessage('Post shared successfully');
 
 
-            //send notification for friends
+            //send notification for friends and for main post owner 
+
         }catch(Exception $exception){
             return $this->returnErrorMessage($exception->getMessage());
 

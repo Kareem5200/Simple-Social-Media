@@ -27,9 +27,8 @@ class UserService{
         return  new UserResource($this->user_repository->create($data));
     }
 
-
     //Update user data
-    public function updateBio(array $data){
+    public function updateprofile(array $data){
 
         return $this->user_repository->update($data);
     }
@@ -57,7 +56,7 @@ class UserService{
 
 
     }
-    
+
 
 
 

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Profile\UpdateBioRequest;
+use App\Http\Requests\Profile\UpdateProfileRequest;
 use App\Http\Requests\Profile\UpdatePasswordRequest;
 use App\Http\Requests\Profile\UpdateProfileImageRequest;
 use App\Http\Services\UserService;
@@ -26,11 +26,11 @@ class ProfileController extends Controller
 
 
     //Edit the user bio
-    public function updateBio(UpdateBioRequest $request){
+    public function updateProfile(UpdateProfileRequest $request){
 
         try{
-            $this->user_service->updateBio($request->validated());
-            return $this->returnSuccessMessage('Your bio updated successfully');
+            $this->user_service->updateprofile($request->validated());
+            return $this->returnSuccessMessage('Your profile updated successfully');
         }catch(Exception $exception){
 
             return $this->returnErrorMessage($exception->getMessage());

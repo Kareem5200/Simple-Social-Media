@@ -4,7 +4,7 @@ namespace App\Http\Requests\Profile;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateBioRequest extends FormRequest
+class UpdateProfileRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,7 +22,8 @@ class UpdateBioRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'bio'=>['required','string','max:255'],
+            'bio'=>['nullable','string','max:255','required_without:name'],
+            'name'=>['sometimes','required','string','max:255'],
         ];
     }
 }
