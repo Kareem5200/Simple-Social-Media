@@ -30,10 +30,6 @@ class FriendRepository{
 
 
 
-
-
-
-
     public function addFriend($friend_id){
         return $this->getUser()->sentFriendRequests()->create([
             'friend_id'=>$friend_id,
@@ -61,14 +57,14 @@ class FriendRepository{
                 ->delete();
     }
 
-    public function getFriends($user_id){
+    public function getFriends($user_id,array $columns){
        return User::whereHas('addedFriends', function ($query) use ($user_id) {
             $query->where('friend_id', $user_id);
         })
         ->orWhereHas('receivedFriends', function ($query) use ($user_id) {
             $query->where('user_id', $user_id);
         })
-        ->get(['id', 'name', 'profile_image']);
+        ->get($columns);
 
     }
 

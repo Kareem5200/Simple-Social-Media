@@ -2,9 +2,11 @@
 
 namespace App\Http\Services;
 
-use App\Http\Repositories\SharePostRepository;
-use App\Http\Resources\SharedPostResource;
 use App\Models\SharedPost;
+use App\Http\Resources\SharedPostResource;
+use App\Http\Repositories\SharePostRepository;
+use App\Notifications\Post\PostOwnerNotification;
+use App\Notifications\Post\SharePostNotification;
 
 class SharePostService{
     public function __construct(public SharePostRepository $sharePost_repository)
@@ -12,13 +14,26 @@ class SharePostService{
 
     }
 
-    public function create(array $data,int $post_id){
-        $data = array_merge($data,[
+    public function create(array $data,$friend_service,$post_service,$notification_service,int $post_id){
+       $user = auth()->user();
+
+        $shared_post =  $this->sharePost_repository->create(array_merge($data,[
             'user_id'=>auth()->id(),
             'post_id'=>$post_id,
-        ]);
+        ]));
 
-        return $this->sharePost_repository->create($data);
+        $main_post_owner = $post_service->getPostOwner($post_id);
+
+        $friends = $friend_service->getFriends($user->id,['id'])->reject(function($friend) use ($main_post_owner){
+
+            return  $friend->id == $main_post_owner->id;
+        });
+
+        if($main_post_owner->id != $user->id){
+
+            $notification_service->sendNotificationToUser($main_post_owner,new PostOwnerNotification($user,$shared_post->id));
+        }
+        $notification_service->sendNotificationToFriends($friends,new SharePostNotification($user,$shared_post->id));
 
     }
 
@@ -35,9 +50,6 @@ class SharePostService{
         return $this->sharePost_repository->get($id);
     }
 
-    // public function getWithPost(int $id){
-    //     return $this->sharePost_repository->getWithPost($id);
-    // }
 
     public function getWithPostResource(int $id){
         return new SharedPostResource($this->sharePost_repository->getWithPost($id));
@@ -51,9 +63,7 @@ class SharePostService{
                 return null;
             }
 
-        return $user_posts->count() > 1
-                ? SharedPostResource::collection($user_posts)
-                : new SharedPostResource($user_posts->first());
+        return SharedPostResource::collection($user_posts);
         }
 
 }

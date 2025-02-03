@@ -1,35 +1,32 @@
 <?php
 
-namespace App\Notifications;
+namespace App\Notifications\Post;
 
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
-use App\Http\Resources\UserResource;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Queue\InteractsWithQueue;
 
-class AcceptFriendNotification extends Notification
+class CreatePostNotification extends Notification implements ShouldQueue
 {
-    use Queueable;
+    use Queueable , InteractsWithQueue;
 
-
-    private $notification_data;
-
+    protected $content;
+    public $tries = 3;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(public User $user)
+    public function __construct(public User $user,public int $post_id)
     {
-        $this->notification_data = [
-            // 'user_name'=>$this->user->name,
-            // 'profile_url'=>url('/api/profile',$user->id),
-            // 'user_image'=>asset('/storage/profile_images/'.$this->user->profile_image),4
-            'user'=>new UserResource($user),
-            'body'=>'Your friend request accepted',
+        $this->content = [
+            'user'=> new UserResource($user),
+            'post_url'=>url('api/get-post',$post_id),
+            'body'=> "New post created",
         ];
-
     }
 
     /**
@@ -39,9 +36,9 @@ class AcceptFriendNotification extends Notification
      */
     public function via(object $notifiable): array
     {
+
         return ['database','broadcast'];
     }
-
     /**
      * Get the array representation of the notification.
      *
@@ -49,11 +46,11 @@ class AcceptFriendNotification extends Notification
      */
     public function toArray(object $notifiable): array
     {
-        return $this->notification_data;
+        return  $this->content;
     }
 
     public function toBroadcast(object $notifiable): array
     {
-        return $this->notification_data;
+        return  $this->content;
     }
 }

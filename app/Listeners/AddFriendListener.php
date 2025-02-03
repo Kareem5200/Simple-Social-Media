@@ -4,7 +4,7 @@ namespace App\Listeners;
 
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use App\Notifications\addFriendNotification;
+use App\Notifications\Friend\addFriendNotification;
 
 class AddFriendListener
 {

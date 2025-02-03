@@ -2,6 +2,8 @@
 
 namespace App\Http\Services;
 
+use App\Http\Repositories\FriendRepository;
+use Exception;
 use App\Models\Post;
 use App\Models\User;
 use App\Models\TextPost;
@@ -9,7 +11,7 @@ use App\Models\MediaPost;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\PostResource;
 use App\Http\Repositories\PostRepository;
-use Exception;
+use App\Notifications\Post\CreatePostNotification;
 
 class PostService{
 
@@ -17,23 +19,29 @@ class PostService{
 
     }
 
+
+
+
     //in create use Notification for friends
-    public function createTextPost(array $data){
+    public function createTextPost($friend_service,$notification_service,array $data){
+        $user = auth()->user();
         $text_post = $this->post_repository->createTextPost($data);
-        return  $this->post_repository->createPost($text_post);
-       //Send notification for friends
+        $post = $this->post_repository->createPost($text_post);
+        $notification_service->sendNotificationToFriends($friend_service->getFriends($user->id,['id']),new CreatePostNotification($user,$post->id));
+
     }
 
-    public function CreateImagePost(array $data){
+    public function CreateImagePost($friend_service,$notification_service,array $data){
 
-        $data = checkUploadedFile($data,'content','/public/posts/image');
-
-        if($data){
+        if($data = checkUploadedFile($data,'content','/public/posts/image')){
+            $user = auth()->user();
             $media_post =  $this->post_repository->createMediaPost($data);
-            return  $this->post_repository->createPost($media_post);
-        }
+            $post = $this->post_repository->createPost($media_post);
+            $notification_service->sendNotificationToFriends($friend_service->getFriends($user->id,['id']),new CreatePostNotification($user,$post->id));
+        }else{
 
-        throw new Exception('Error in uploading file');
+            throw new Exception('Error in uploading file');
+        }
 
 
     }
@@ -61,6 +69,12 @@ class PostService{
 
         }
         return $this->post_repository->getPostWithoutData($id);
+    }
+
+
+    public function getPostOwner(int $post_id){
+        $post = $this->getPostWithoutData($post_id);
+        return $post->user;
     }
 
 
@@ -108,8 +122,7 @@ class PostService{
 
         if($post->postable instanceof MediaPost && $post->postable->type == 'image' ){
 
-            $data = checkUploadedFile($data,'content','/public/posts/image');
-            if($data){
+            if($data = checkUploadedFile($data,'content','/public/posts/image')){
                 return $this->post_repository->updatePost($post,$data);
             }
             throw new Exception('Error in updating'); ;

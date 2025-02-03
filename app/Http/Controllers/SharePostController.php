@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Post\CreateSharePostRequest;
+use App\Http\Services\FriendService;
+use App\Http\Services\NotificationService;
+use App\Http\Services\PostService;
 use App\Http\Services\SharePostService;
 use Exception;
 
@@ -14,13 +17,11 @@ class SharePostController extends Controller
 
     }
 
-    public function create(CreateSharePostRequest $request,$id){
+    public function create(CreateSharePostRequest $request,FriendService $friend_service,
+                            PostService $post_service,NotificationService $notification_service,$id){
         try{
-            $this->sharePost_service->create($request->validated(),$id);
+            $this->sharePost_service->create($request->validated(),$friend_service,$post_service,$notification_service,$id);
             return $this->returnSuccessMessage('Post shared successfully');
-
-
-            //send notification for friends and for main post owner 
 
         }catch(Exception $exception){
             return $this->returnErrorMessage($exception->getMessage());

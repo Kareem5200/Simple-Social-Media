@@ -10,13 +10,14 @@ use App\Http\Requests\Post\ConvertMediaToTextPostRequest;
 use App\Http\Requests\Post\ConvertTextToImagePostRequest;
 use App\Http\Requests\Post\UpdateImagePostRequest;
 use App\Http\Requests\Post\UpdateTextPostRequest;
+use App\Http\Services\FriendService;
+use App\Http\Services\NotificationService;
 use Exception;
 
 class PostController extends Controller
 {
     private $create_success_message = 'Post created successfully';
     private $update_success_message = 'Post updated successfully';
-    private $error_message = 'Something wrong';
 
     public function __construct(public PostService $post_service)
     {
@@ -37,10 +38,10 @@ class PostController extends Controller
 
 
     //Create new text post
-    public function createTextPost(CreateTextPostRequest $request){
+    public function createTextPost(CreateTextPostRequest $request,NotificationService $notification_service,FriendService $friend_service){
 
         try{
-            $this->post_service->createTextPost($request->validated());
+            $this->post_service->createTextPost($friend_service,$notification_service,$request->validated());
             return $this->returnSuccessMessage($this->create_success_message);
         }catch(Exception $exception){
 
@@ -50,10 +51,10 @@ class PostController extends Controller
     }
 
     //create new image post
-    public function createImagePost(CreateImagePostRequest $request){
+    public function createImagePost(CreateImagePostRequest $request,NotificationService $notification_service,FriendService $friend_service){
         try{
 
-            $this->post_service->createImagePost($request->validated());
+            $this->post_service->createImagePost($friend_service,$notification_service,$request->validated());
             return $this->returnSuccessMessage($this->create_success_message);
 
         }catch(Exception $exception){

@@ -1,24 +1,29 @@
 <?php
 
-namespace App\Notifications;
+namespace App\Notifications\comment;
 
-use Illuminate\Broadcasting\PrivateChannel;
+use App\Http\Resources\UserResource;
+use App\Models\User;
 use Illuminate\Bus\Queueable;
+use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Notifications\Notification;
 
-
-class CreatePostNotification extends Notification
+class MakeCommentNotification extends Notification
 {
     use Queueable;
+    protected $content ;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(public $post_id)
+    public function __construct(public User $user ,$comment_ID)
     {
-        //
+        $this->content = [
+            'user'=>new UserResource($user),
+            'comment_url'=>url('api/get-comment',$comment_ID),
+            'body'=>'Have a new comment on your post',
+        ];
     }
 
     /**
@@ -28,7 +33,7 @@ class CreatePostNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['database','broadcast'];
+        return ['mail'];
     }
 
     /**
@@ -52,16 +57,5 @@ class CreatePostNotification extends Notification
         return [
             //
         ];
-    }
-    public function toBroadcast(object $notifiable): array
-    {
-        return [
-            //
-        ];
-    }
-
-    public function broadcastOn()
-    {
-      return new PrivateChannel('');
     }
 }

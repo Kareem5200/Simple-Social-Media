@@ -106,10 +106,10 @@ class FriendController extends Controller
 
 
     public function getFriends($user_id){
-        
+
         try{
 
-            $friends = $this->friend_service->getFriends($user_id);
+            $friends = $this->friend_service->getFriendsResource($user_id);
             return $this->returnData('Data is returned successfully',[
                 'friends_count'=>$friends->count(),
                 'friends'=>$friends

@@ -79,9 +79,12 @@ class FriendService{
 
 
 
-    public function getFriends(int $user_id){
-        $friends = $this->friend_repository->getFriends($user_id);
-        return UserResource::collection($friends);
+    public function getFriends(int $user_id,$columns = ['id','name','profile_image']){
+        return $this->friend_repository->getFriends($user_id,$columns);
+    }
+
+    public function getFriendsResource(int $user_id,$columns = ['id','name','profile_image']){
+        return UserResource::collection($this->getFriends($user_id,$columns));
     }
 
     public function getSuggestedFriends(){

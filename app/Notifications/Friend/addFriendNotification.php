@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Notifications;
+namespace App\Notifications\Friend;
 
 use App\Http\Resources\UserResource;
 use App\Models\User;
@@ -25,13 +25,10 @@ class addFriendNotification extends Notification
     {
 
         $this->notifiction_data =[
+            'user'=>new UserResource($user),
             'accept_request_url'=>url('/api/accept-friend',$user->id),
             'delete_request_url'=> url('/api/delete-friendRequest',$user->id),
-            'user'=>new UserResource($user),
-            // 'profile_url'=>url('/api/profile',$user->id),
-            // 'username'=>$this->user->name,
-            // 'image'=>asset('/storage/profile_images/'.$this->user->profile_image),
-            'body'=>'You have a friend request from new user',
+            'body'=>'You have a new friend request',
         ] ;
 
     }
