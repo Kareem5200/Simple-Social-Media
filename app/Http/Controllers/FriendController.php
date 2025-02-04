@@ -3,11 +3,8 @@
 namespace App\Http\Controllers;
 
 use Exception;
-use App\Models\User;
-use Illuminate\Support\Facades\DB;
 use App\Http\Services\FriendService;
-
-
+use App\Http\Services\NotificationService;
 
 class FriendController extends Controller
 {
@@ -17,11 +14,11 @@ class FriendController extends Controller
     }
 
 
-    public function addFriend($friend_id){
+    public function addFriend($friend_id,NotificationService $notification_service){
 
         try{
 
-            $this->friend_service->addFriend($friend_id);
+            $this->friend_service->addFriend($friend_id,$notification_service);
             return $this->returnSuccessMessage('Friend request sent');
 
         }catch(Exception $exception){
@@ -31,11 +28,11 @@ class FriendController extends Controller
     }
 
 
-    public function acceptFriendRequest($user_id){
+    public function acceptFriendRequest($user_id,$notification_id,NotificationService $notification_service){
 
         try{
 
-            $this->friend_service->acceptRequest($user_id);
+            $this->friend_service->acceptRequest($user_id,$notification_id,$notification_service);
             return $this->returnSuccessMessage('Friend request sent');
 
         }catch(Exception $exception){
@@ -47,11 +44,11 @@ class FriendController extends Controller
     }
 
 
-    public function deleteReceivedFriendRequest($user_id){
+    public function deleteReceivedFriendRequest($user_id,$notification_id,NotificationService $notification_service){
 
         try{
 
-            $this->friend_service->deleteReceivedFriendRequest($user_id);
+            $this->friend_service->deleteReceivedFriendRequest($user_id,$notification_id,$notification_service);
             return $this->returnSuccessMessage('Friend request deleted');
         }catch(Exception $exception){
 

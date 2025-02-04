@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Comment\CreateCommentRequest;
 use App\Http\Services\CommentService;
+use App\Http\Services\NotificationService;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -16,9 +17,9 @@ class CommentController extends Controller
 
 
     //need notification for the post owner
-    public function create(CreateCommentRequest $request , $commentable_type , $commentable_id){
+    public function create(CreateCommentRequest $request ,NotificationService $notification_service ,$commentable_type , $commentable_id){
         try{
-            $this->comment_service->create($request->validated(),$commentable_type,$commentable_id);
+            $this->comment_service->create($request->validated(),$notification_service,$commentable_type,$commentable_id);
             return $this->returnSuccessMessage('Comment created successfully');
         }catch(Exception $exception){
             return $this->returnErrorMessage($exception->getMessage());

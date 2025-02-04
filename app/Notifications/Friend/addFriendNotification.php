@@ -10,26 +10,20 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class addFriendNotification extends Notification
+class AddFriendNotification extends Notification
 {
     use Queueable;
 
 
-    private $notifiction_data ;
+    public $tries = 3 ;
 
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(public User $user )
+    public function __construct(public User $user)
     {
 
-        $this->notifiction_data =[
-            'user'=>new UserResource($user),
-            'accept_request_url'=>url('/api/accept-friend',$user->id),
-            'delete_request_url'=> url('/api/delete-friendRequest',$user->id),
-            'body'=>'You have a new friend request',
-        ] ;
 
     }
 
@@ -51,16 +45,21 @@ class addFriendNotification extends Notification
      */
     public function toArray(object $notifiable): array
     {
-        return $this->notifiction_data;
+        return [
+            'user'=>new UserResource($this->user),
+            'accept_request_url'=>url('/api/accept-friend',[$this->user->id, $this->id]),
+            'delete_request_url'=> url('/api/delete-friendRequest',[$this->user->id, $this->id]),
+            'body'=>'You have a new friend request',
+        ] ;
     }
 
     public function toBroadcast(object $notifiable): array
     {
-        return $this->notifiction_data;
+        return [
+            'user'=>new UserResource($this->user),
+            'accept_request_url'=>url('/api/accept-friend',[$this->user->id, $this->id]),
+            'delete_request_url'=> url('/api/delete-friendRequest',[$this->user->id, $this->id]),
+            'body'=>'You have a new friend request',
+        ] ;
     }
-
-    // public function broadcastOn()
-    // {
-    //     return new PrivateChannel('Friend.Requests.'.$this->notifiable_id);
-    // }
 }

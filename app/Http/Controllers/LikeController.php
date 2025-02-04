@@ -7,6 +7,7 @@ use Exception;
 use Illuminate\Http\Request;
 use App\Http\Services\PostService;
 use App\Http\Services\LikeService;
+use App\Http\Services\NotificationService;
 
 class LikeController extends Controller
 {
@@ -17,11 +18,11 @@ class LikeController extends Controller
 
     }
 
-    public function create(Request $request,$likeable_type,$likeable_id){
+    public function create(Request $request,NotificationService $notification_service,$likeable_type,$likeable_id){
 
         try{
 
-            $this->like_service->create($likeable_type,$likeable_id);
+            $this->like_service->create($notification_service,$likeable_type,$likeable_id);
 
             return $this->returnSuccessMessage('Like is done');
         }catch(Exception $exception){

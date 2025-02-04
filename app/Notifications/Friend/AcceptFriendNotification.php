@@ -12,17 +12,17 @@ use Illuminate\Notifications\Messages\MailMessage;
 class AcceptFriendNotification extends Notification
 {
     use Queueable;
+    protected $content;
+    public $tries = 3 ;
 
-
-    private $notification_data;
 
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(public User $user)
+    public function __construct(User $user)
     {
-        $this->notification_data = [
+        $this->content = [
             'user'=>new UserResource($user),
             'body'=>'Your friend request accepted',
         ];
@@ -46,11 +46,11 @@ class AcceptFriendNotification extends Notification
      */
     public function toArray(object $notifiable): array
     {
-        return $this->notification_data;
+        return $this->content;
     }
 
     public function toBroadcast(object $notifiable): array
     {
-        return $this->notification_data;
+        return $this->content;
     }
 }

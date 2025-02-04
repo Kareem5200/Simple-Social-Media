@@ -20,7 +20,7 @@ class CreatePostNotification extends Notification implements ShouldQueue
     /**
      * Create a new notification instance.
      */
-    public function __construct(public User $user,public int $post_id)
+    public function __construct( User $user, int $post_id)
     {
         $this->content = [
             'user'=> new UserResource($user),

@@ -29,10 +29,7 @@ class SharePostService{
             return  $friend->id == $main_post_owner->id;
         });
 
-        if($main_post_owner->id != $user->id){
-
-            $notification_service->sendNotificationToUser($main_post_owner,new PostOwnerNotification($user,$shared_post->id));
-        }
+        $main_post_owner->id == $user->id ? : $notification_service->sendNotificationToUser($main_post_owner,new PostOwnerNotification($user,$shared_post->id));
         $notification_service->sendNotificationToFriends($friends,new SharePostNotification($user,$shared_post->id));
 
     }

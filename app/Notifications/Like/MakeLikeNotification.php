@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Notifications\Post;
+namespace App\Notifications\Like;
 
 use App\Http\Resources\UserResource;
 use App\Models\User;
@@ -9,10 +9,9 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class SharePostNotification extends Notification implements ShouldQueue
+class MakeLikeNotification extends Notification
 {
     use Queueable;
-
     protected $content;
     public $tries = 3 ;
 
@@ -20,12 +19,12 @@ class SharePostNotification extends Notification implements ShouldQueue
     /**
      * Create a new notification instance.
      */
-    public function __construct( User $user ,$sharedPost_ID)
+    public function __construct(User $user , $likeable_type , $likeable_id)
     {
-        $this->content = [
+        $this->content=[
             'user'=>new UserResource($user),
-            'post_url'=>url('api/get-share-post',$sharedPost_ID),
-            'body'=>'Your friend share new post',
+            'likeable_url'=>url("api/get-$likeable_type",$likeable_id),
+            'body'=>'Someone like your content',
         ];
     }
 
@@ -36,8 +35,9 @@ class SharePostNotification extends Notification implements ShouldQueue
      */
     public function via(object $notifiable): array
     {
-        return ['databse','broadcast'];
+        return ['database','broadcast'];
     }
+
 
 
     /**

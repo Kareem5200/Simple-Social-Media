@@ -6,6 +6,7 @@ use App\Http\Resources\CommentResource;
 use App\Models\Comment;
 use App\Models\Post;
 use App\Models\SharedPost;
+use App\Notifications\comment\MakeCommentNotification;
 use Exception;
 
 class CommentService{
@@ -16,17 +17,24 @@ class CommentService{
     }
 
     private $comments_morphs = [
-        'shared_post'=>SharedPost::class,
+        'shared-post'=>SharedPost::class,
         'post'=>Post::class,
     ];
 
-    public function create($data,$commentable_type,$commentable_id){
-        if(array_key_exists($commentable_type,$this->comments_morphs)){
-            $commentable = $this->comment_repository->getCommentable($this->comments_morphs[$commentable_type],$commentable_id);
-            $data['user_id'] =auth()->id();
-            return  $this->comment_repository->create($commentable , $data);
+    public function create($data,$notification_service,$commentable_type,$commentable_id){
+        if(!array_key_exists($commentable_type,$this->comments_morphs)){
+            throw new Exception('undefined post');
         }
-        throw new Exception('undefined post');
+
+
+        $commentable = $this->comment_repository->getCommentable($this->comments_morphs[$commentable_type],$commentable_id);
+        $commentable_owner = $commentable->user;
+        $user = auth()->user();
+        $comment = $this->comment_repository->create($commentable ,array_merge($data,[
+            'user_id'=>$user->id,
+        ]));
+
+        $user->id ==  $commentable_owner->id ?: $notification_service->sendNotificationToUser($commentable_owner,new MakeCommentNotification($user,$commentable_type,$commentable_id,$comment->id));
     }
 
     public function get(int $id){

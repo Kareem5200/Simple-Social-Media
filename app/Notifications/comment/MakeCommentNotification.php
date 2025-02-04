@@ -12,16 +12,18 @@ use Illuminate\Notifications\Messages\MailMessage;
 class MakeCommentNotification extends Notification
 {
     use Queueable;
-    protected $content ;
+    protected $content;
+    public $tries = 3 ;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(public User $user ,$comment_ID)
+    public function __construct(User $user,$commentable_type,$commentable_id,$comment_ID)
     {
         $this->content = [
             'user'=>new UserResource($user),
             'comment_url'=>url('api/get-comment',$comment_ID),
+            'commentable_url'=>url("api/get-$commentable_type",$commentable_id),
             'body'=>'Have a new comment on your post',
         ];
     }
@@ -33,19 +35,9 @@ class MakeCommentNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['mail'];
+        return ['database','broadcast'];
     }
 
-    /**
-     * Get the mail representation of the notification.
-     */
-    public function toMail(object $notifiable): MailMessage
-    {
-        return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
-    }
 
     /**
      * Get the array representation of the notification.
@@ -54,8 +46,11 @@ class MakeCommentNotification extends Notification
      */
     public function toArray(object $notifiable): array
     {
-        return [
-            //
-        ];
+        return $this->content;
+    }
+
+    public function toBroadcast(object $notifiable): array
+    {
+        return $this->content;
     }
 }

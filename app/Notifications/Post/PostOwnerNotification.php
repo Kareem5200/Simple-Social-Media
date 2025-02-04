@@ -13,10 +13,12 @@ class PostOwnerNotification extends Notification
 {
     use Queueable;
     protected $content ;
+    public $tries = 3 ;
+
     /**
      * Create a new notification instance.
      */
-    public function __construct(public User $user , $sharedpost_ID)
+    public function __construct( User $user , $sharedpost_ID)
     {
         $this->content = [
             'user'=>new UserResource($user),

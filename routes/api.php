@@ -11,6 +11,7 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\FriendController;
 use App\Http\Controllers\LikeController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\SharePostController;
 
 /*
@@ -92,8 +93,8 @@ Route::middleware('auth')->group(function(){
     Route::controller(FriendController::class)->group(function(){
 
         Route::post('add-friend/{friend_id}','addFriend');
-        Route::patch('accept-friend/{user_id}','acceptFriendRequest');
-        Route::delete('delete-friendRequest/{user_id}','deleteReceivedFriendRequest');
+        Route::patch('accept-friend/{user_id}/{notification_id}','acceptFriendRequest');
+        Route::delete('delete-friendRequest/{user_id}/{notification_id}','deleteReceivedFriendRequest');
         Route::delete('cancel-sentRequest/{friend_id}','cancelSentFriendRequest');
         Route::delete('unfriend/{friend_id}','unfriend');
         Route::get('get-friends/{user_id}','getFriends');
@@ -101,6 +102,11 @@ Route::middleware('auth')->group(function(){
 
 
 
+    });
+
+    Route::controller(NotificationController::class)->group(function(){
+        Route::get('get-notifications','get');
+        Route::delete('delete-notification/{id}','delete');
     });
 
 

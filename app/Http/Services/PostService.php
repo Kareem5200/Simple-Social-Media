@@ -15,7 +15,7 @@ use App\Notifications\Post\CreatePostNotification;
 
 class PostService{
 
-     public function __construct(public PostRepository $post_repository) {
+    public function __construct(public PostRepository $post_repository) {
 
     }
 

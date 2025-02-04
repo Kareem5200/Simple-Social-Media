@@ -1,11 +1,11 @@
 <?php
 namespace App\Http\Services;
 
-use App\Events\AcceptFriendEvent;
-use App\Events\AddFriendEvent;
 use App\Http\Repositories\FriendRepository;
 use App\Http\Repositories\UserRepository;
 use App\Http\Resources\UserResource;
+use App\Notifications\Friend\AcceptFriendNotification;
+use App\Notifications\Friend\AddFriendNotification;
 use Exception;
 
 class FriendService{
@@ -16,7 +16,7 @@ class FriendService{
 
     }
 
-    public function addFriend(int $friend_id){
+    public function addFriend(int $friend_id,$notification_service){
 
         if(auth()->id() == $friend_id || $this->friend_repository->checkFriendExists($friend_id)){
 
@@ -24,32 +24,34 @@ class FriendService{
         }
 
         $friend = $this->user_repository->getById($friend_id);
-        event(new AddFriendEvent($friend,auth()->user()));
-        return $this->friend_repository->addFriend($friend_id);
+        $this->friend_repository->addFriend($friend_id);
+        $notification_service->sendNotificationToUser($friend ,new AddFriendNotification(auth()->user()));
     }
 
-    public function acceptRequest(int $user_id){
+    public function acceptRequest(int $user_id,$notification_id,$notification_service){
 
         if($this->friend_repository->checkReceivedRequestExists($user_id)){
             $user = $this->user_repository->getById($user_id);
-            event(new AcceptFriendEvent($user , auth()->user()));
 
-            return $this->friend_repository->acceptRequest($user_id);
+
+            if(!$this->friend_repository->acceptRequest($user_id)){
+                throw new Exception('Error in update process');
+            }
+
+            $notification_service->sendNotificationToUser($user,new AcceptFriendNotification(auth()->user()));
+           return  $notification_service->delete($notification_id);
         }
 
         throw new Exception('Error in user ID');
     }
 
-    public function deleteReceivedFriendRequest(int $user_id){
-        // if($this->friend_repository->checkReceivedRequestExists($user_id)){
-        //     return $this->friend_repository->deleteReceivedFriendRequest($user_id);
-        // }
+    public function deleteReceivedFriendRequest(int $user_id ,$notification_id,$notification_service){
 
-        // throw new Exception('Error in user ID');
+        if($this->friend_repository->deleteReceivedFriendRequest($user_id)){
 
-        if(!$this->friend_repository->deleteReceivedFriendRequest($user_id)){
-            throw new Exception('Error in user ID');
+            $notification_service->delete($notification_id);
         }
+        throw new Exception('Error in user ID');
 
 
     }
