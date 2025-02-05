@@ -14,19 +14,15 @@ class CreatePostNotification extends Notification implements ShouldQueue
 {
     use Queueable , InteractsWithQueue;
 
-    protected $content;
+
     public $tries = 3;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct( User $user, int $post_id)
+    public function __construct(public User $user,public  int $post_id)
     {
-        $this->content = [
-            'user'=> new UserResource($user),
-            'post_url'=>url('api/get-post',$post_id),
-            'body'=> "New post created",
-        ];
+
     }
 
     /**
@@ -46,11 +42,19 @@ class CreatePostNotification extends Notification implements ShouldQueue
      */
     public function toArray(object $notifiable): array
     {
-        return  $this->content;
+        return [
+            'user'=> new UserResource($this->user),
+            'post_url'=>url('api/get-post',[$this->post_id,$this->id]),
+            'body'=> "New post created",
+        ];;
     }
 
     public function toBroadcast(object $notifiable): array
     {
-        return  $this->content;
+        return [
+            'user'=> new UserResource($this->user),
+            'post_url'=>url('api/get-post',[$this->post_id,$this->id]),
+            'body'=> "New post created",
+        ];;
     }
 }

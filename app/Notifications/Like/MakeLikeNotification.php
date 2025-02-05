@@ -12,20 +12,15 @@ use Illuminate\Notifications\Messages\MailMessage;
 class MakeLikeNotification extends Notification
 {
     use Queueable;
-    protected $content;
     public $tries = 3 ;
 
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(User $user , $likeable_type , $likeable_id)
+    public function __construct(public User $user ,public $likeable_type ,public $likeable_id)
     {
-        $this->content=[
-            'user'=>new UserResource($user),
-            'likeable_url'=>url("api/get-$likeable_type",$likeable_id),
-            'body'=>'Someone like your content',
-        ];
+
     }
 
     /**
@@ -47,11 +42,18 @@ class MakeLikeNotification extends Notification
      */
     public function toArray(object $notifiable): array
     {
-        return $this->content;
+        return     [
+            'user'=>new UserResource($this->user),
+            'likeable_url'=>url("api/get-$this->likeable_type",[$this->likeable_id,$this->id]),
+            'body'=>'Someone like your content',
+        ];
     }
-
     public function toBroadcast(object $notifiable): array
     {
-        return $this->content;
+        return [
+            'user'=>new UserResource($this->user),
+            'likeable_url'=>url("api/get-$this->likeable_type",[$this->likeable_id,$this->id]),
+            'body'=>'Someone like your content',
+        ];
     }
 }

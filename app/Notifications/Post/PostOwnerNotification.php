@@ -12,19 +12,14 @@ use Illuminate\Notifications\Messages\MailMessage;
 class PostOwnerNotification extends Notification
 {
     use Queueable;
-    protected $content ;
+
     public $tries = 3 ;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct( User $user , $sharedpost_ID)
+    public function __construct(public User $user ,public $sharedpost_ID)
     {
-        $this->content = [
-            'user'=>new UserResource($user),
-            'post_url'=>url('api/get-share-post',$sharedpost_ID),
-            'body'=>'Your post is shared',
-        ];
 
     }
 
@@ -46,11 +41,19 @@ class PostOwnerNotification extends Notification
      */
     public function toArray(object $notifiable): array
     {
-        return $this->content;
+        return [
+            'user'=>new UserResource($this->user),
+            'post_url'=>url('api/get-share-post',[$this->sharedpost_ID,$this->id]),
+            'body'=>'Your post is shared',
+        ];
     }
 
     public function toBroadcast(object $notifiable): array
     {
-        return $this->content;
+        return [
+            'user'=>new UserResource($this->user),
+            'post_url'=>url('api/get-share-post',[$this->sharedpost_ID,$this->id]),
+            'body'=>'Your post is shared',
+        ];
     }
 }

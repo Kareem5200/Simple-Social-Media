@@ -41,7 +41,8 @@ class CommentService{
         return $this->comment_repository->get($id);
     }
 
-    public function getWithLikes(int $id){
+    public function getWithLikes(int $id,$notification_id,$notification_service){
+        $notification_service->markAsRead($notification_id);
         return new CommentResource($this->comment_repository->getWithLikes($id));
     }
 

@@ -45,71 +45,13 @@ Route::controller(VerificationController::class)->middleware(['auth','throttle:3
 });
 
 Route::middleware('auth')->group(function(){
-
-    Route::controller(ProfileController::class)->group(function(){
-        Route::get('/profile/{user}','profile');
-        Route::post('/update-profile','updateprofile');
-        Route::post('/update-image','updateProfileImage');
-        Route::post('/update-password','updatePassword');
-    });
-
-    Route::controller(PostController::class)->group(function(){
-
-        Route::post('create-textPost','createTextPost');
-        Route::post('create-imagePost','createImagePost');
-        Route::get('get-post/{id}','getPost');
-        Route::delete('delete-post/{id}','forceDeletePost');
-        Route::post('update-textPost/{id}','updateTextPost');
-        Route::post('convert-textToImagePost/{id}','convertTextToImagePost');
-        Route::post('update-imagePost/{id}','updateImagePost');
-        Route::post('convert-ImageToTextPost/{id}','convertMediaToTextPost');
-        Route::delete('make-onlyMe/{id}','makeOnlyMePost');
-        Route::post('remove-onlyMe/{id}','removeOnlyMeOnPost');
-
-
-
-    });
-
-    Route::controller(LikeController::class)->group(function(){
-        Route::post('like/{likeable_type}/{likeable_id}','create');
-        Route::delete('unlike/{id}','delete');
-    });
-
-    Route::controller(SharePostController::class)->group(function(){
-        Route::post('share-post/{id}','create')->middleware('checkPostID');
-        Route::delete('delete-share-post/{id}','delete');
-        Route::patch('update-share-post/{id}','update');
-        Route::get('get-share-post/{id}','get');
-        Route::get('get-share-posts/{user_id}','getUserPosts');
-    });
-
-    Route::controller(CommentController::class)->group(function(){
-        Route::post('create-comment/{commentable_type}/{commentable_id}','create');
-        Route::get('get-comment/{id}','get');
-        Route::patch('update-comment/{id}','update');
-        Route::delete('delete-comment/{id}','delete');
-    });
-
-    Route::controller(FriendController::class)->group(function(){
-
-        Route::post('add-friend/{friend_id}','addFriend');
-        Route::patch('accept-friend/{user_id}/{notification_id}','acceptFriendRequest');
-        Route::delete('delete-friendRequest/{user_id}/{notification_id}','deleteReceivedFriendRequest');
-        Route::delete('cancel-sentRequest/{friend_id}','cancelSentFriendRequest');
-        Route::delete('unfriend/{friend_id}','unfriend');
-        Route::get('get-friends/{user_id}','getFriends');
-        Route::get('get-suggestedFriends','getSuggestedFriends');
-
-
-
-    });
-
-    Route::controller(NotificationController::class)->group(function(){
-        Route::get('get-notifications','get');
-        Route::delete('delete-notification/{id}','delete');
-    });
-
-
+    require __DIR__.'/modules/profile.php';
+    require __DIR__.'/modules/posts.php';
+    require __DIR__.'/modules/likes.php';
+    require __DIR__.'/modules/shares.php';
+    require __DIR__.'/modules/comments.php';
+    require __DIR__.'/modules/friends.php';
+    require __DIR__.'/modules/notifications.php';
 });
 
 

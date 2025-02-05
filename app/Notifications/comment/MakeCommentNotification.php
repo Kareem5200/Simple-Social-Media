@@ -12,20 +12,15 @@ use Illuminate\Notifications\Messages\MailMessage;
 class MakeCommentNotification extends Notification
 {
     use Queueable;
-    protected $content;
+
     public $tries = 3 ;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(User $user,$commentable_type,$commentable_id,$comment_ID)
+    public function __construct(public User $user,public $commentable_type,public $commentable_id,public $comment_ID)
     {
-        $this->content = [
-            'user'=>new UserResource($user),
-            'comment_url'=>url('api/get-comment',$comment_ID),
-            'commentable_url'=>url("api/get-$commentable_type",$commentable_id),
-            'body'=>'Have a new comment on your post',
-        ];
+
     }
 
     /**
@@ -46,11 +41,21 @@ class MakeCommentNotification extends Notification
      */
     public function toArray(object $notifiable): array
     {
-        return $this->content;
+        return   [
+            'user'=>new UserResource($this->user),
+            'comment_url'=>url('api/get-comment',[$this->comment_ID,$this->id]),
+            'commentable_url'=>url("api/get-$this->commentable_type",[$this->commentable_id,$this->id]),
+            'body'=>'Have a new comment on your post',
+        ];
     }
 
     public function toBroadcast(object $notifiable): array
     {
-        return $this->content;
+        return   [
+            'user'=>new UserResource($this->user),
+            'comment_url'=>url('api/get-comment',[$this->comment_ID,$this->id]),
+            'commentable_url'=>url("api/get-$this->commentable_type",[$this->commentable_id,$this->id]),
+            'body'=>'Have a new comment on your post',
+        ];
     }
 }

@@ -13,20 +13,15 @@ class SharePostNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    protected $content;
     public $tries = 3 ;
 
 
     /**
      * Create a new notification instance.
      */
-    public function __construct( User $user ,$sharedPost_ID)
+    public function __construct(public User $user ,public $sharedPost_ID)
     {
-        $this->content = [
-            'user'=>new UserResource($user),
-            'post_url'=>url('api/get-share-post',$sharedPost_ID),
-            'body'=>'Your friend share new post',
-        ];
+
     }
 
     /**
@@ -47,11 +42,19 @@ class SharePostNotification extends Notification implements ShouldQueue
      */
     public function toArray(object $notifiable): array
     {
-        return $this->content;
+        return  [
+            'user'=>new UserResource($this->user),
+            'post_url'=>url('api/get-share-post',[$this->sharedPost_ID,$this->id]),
+            'body'=>'Your friend share new post',
+        ];
     }
 
     public function toBroadcast(object $notifiable): array
     {
-        return $this->content;
+        return  [
+            'user'=>new UserResource($this->user),
+            'post_url'=>url('api/get-share-post',[$this->sharedPost_ID,$this->id]),
+            'body'=>'Your friend share new post',
+        ];
     }
 }

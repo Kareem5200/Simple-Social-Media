@@ -44,11 +44,13 @@ class SharePostService{
     }
 
     public function get(int $id){
+
         return $this->sharePost_repository->get($id);
     }
 
 
-    public function getWithPostResource(int $id){
+    public function getWithPostResource(int $id,$notification_id,$notification_service){
+        $notification_service->markAsRead($notification_id);
         return new SharedPostResource($this->sharePost_repository->getWithPost($id));
     }
 

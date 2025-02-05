@@ -48,8 +48,9 @@ class PostService{
 
     //get post with all comments and likes
     //receive id to make eager loading to get post and their data
-    public function getPost(int $id){
-        return $this->post_repository->getPost($id);
+    public function getPost(int $id , $notification_id ,$notification_service){
+        $notification_service->markAsRead($notification_id);
+        return new PostResource( $this->post_repository->getPost($id));
     }
 
     //Add the user posts in resource
@@ -57,10 +58,10 @@ class PostService{
         return PostResource::collection($this->post_repository->getUserPosts($user));
     }
 
-    //Add specific post in resource
-    public function getPostResource(int $id){
-        return new PostResource($this->getPost($id));
-    }
+    // //Add specific post in resource
+    // public function getPostResource(int $id){
+    //     return new PostResource($this->getPost($id));
+    // }
 
     public function getPostWithoutData($id,bool $trashed = false){
         if($trashed){

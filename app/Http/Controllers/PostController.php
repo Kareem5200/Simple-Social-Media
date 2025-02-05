@@ -65,13 +65,12 @@ class PostController extends Controller
 
 
 
-    //get specific post with all comments and likes
-    //receive id to make eager loading to get post and their data
-    public function getPost($id){
+
+    public function getPost(NotificationService $notification_service,$id ,$notification_id){
 
         try{
 
-            return $this->returnData('Post returned successfully',$this->post_service->getPostResource($id));
+            return $this->returnData('Post returned successfully',$this->post_service->getPost($id ,$notification_id ,$notification_service));
 
         }catch(Exception $exception){
 

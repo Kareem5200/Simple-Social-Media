@@ -14,6 +14,11 @@ class NotificationRepository{
     public function get(){
         return $this->authUser()->notifications()->select(['id','data','created_at','read_at'])->get();
     }
+    public function unreadNotificationCount(){
+        return $this->authUser()->unreadNotifications()->count();
+    }
+
+
 
     public function delete( $id){
         return $this->authUser()->notifications()->where('id',$id)->delete();

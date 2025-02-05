@@ -60,11 +60,14 @@ class SharePostController extends Controller
 
     }
 
-    public function get($id){
+    public function get(NotificationService $notification_service,$id,$notification_id){
         try{
-            $shared_post = $this->sharePost_service->getWithPostResource($id);
+
+            $shared_post = $this->sharePost_service->getWithPostResource($id,$notification_id,$notification_service);
             return $this->returnData('Success process', $shared_post);
+
         }catch(Exception $exception){
+            
             return $this->returnErrorMessage($exception->getMessage());
         }
 

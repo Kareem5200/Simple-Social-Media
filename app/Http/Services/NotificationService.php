@@ -29,7 +29,11 @@ class NotificationService{
         if($notifications->isEmpty()){
             return false;
         }
-        return NotificationResource::collection($notifications);
+
+        return [
+            'notifications'=>NotificationResource::collection($notifications) ,
+            'unread_notification_count'=>$this->notification_repository->unreadNotificationCount(),
+        ];
     }
 
     public function delete($id){

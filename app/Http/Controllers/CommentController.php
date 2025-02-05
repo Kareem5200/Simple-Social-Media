@@ -16,7 +16,7 @@ class CommentController extends Controller
     }
 
 
-    //need notification for the post owner
+    
     public function create(CreateCommentRequest $request ,NotificationService $notification_service ,$commentable_type , $commentable_id){
         try{
             $this->comment_service->create($request->validated(),$notification_service,$commentable_type,$commentable_id);
@@ -26,9 +26,9 @@ class CommentController extends Controller
         }
     }
 
-    public function get($id){
+    public function get(NotificationService $notification_service,$id,$notification_id){
         try{
-            $comment = $this->comment_service->getWithLikes($id);
+            $comment = $this->comment_service->getWithLikes($id,$notification_id,$notification_service);
             return $this->returnData('Comment returned succesfully',$comment);
         }catch(Exception $exception){
             return $this->returnErrorMessage($exception->getMessage());
