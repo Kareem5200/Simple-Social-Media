@@ -70,19 +70,19 @@ class UserService{
 
 
 
-    public function getAllPosts($users_id,$pagination_number,$post_service, $sharedPost_service){
+    public function getAllPosts(array $users_id,$pagination_number,$post_service, $sharedPost_service){
 
         $last_page = 0;
         $merged_posts = [];
 
 
 
-        if($posts = $post_service->getUserPosts([$users_id],$pagination_number)){
+        if($posts = $post_service->getUserPosts($users_id,$pagination_number)){
             $merged_posts = array_merge($merged_posts, $post_service->mapPaginatedPosts($posts)->items());
             $last_page = $posts->lastPage();
         }
 
-        if($shared_posts = $sharedPost_service->getSharedPosts([$users_id],$pagination_number)){
+        if($shared_posts = $sharedPost_service->getSharedPosts($users_id,$pagination_number)){
             $merged_posts = array_merge($merged_posts, $sharedPost_service->mapPaginatedSharedPosts($shared_posts)->items());
             $shared_posts->lastPage() < $last_page ?: $last_page =  $shared_posts->lastPage();
 

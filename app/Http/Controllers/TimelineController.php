@@ -16,12 +16,14 @@ class TimelineController extends Controller
     {
 
     }
+
+
     public function timeline(FriendService $friend_service,UserService $user_service,PostService $post_service,SharePostService $sharePost_service){
         try{
             if($posts = $this->timeline_service->timeline($friend_service,$user_service,$post_service,$sharePost_service)){
                 return $this->returnData('All posts',$posts);
             }
-            return $this->returnSuccessMessage('Has no friends');
+            return $this->returnSuccessMessage('No posts');
 
         }catch(Exception $exception){
             return $this->returnErrorMessage($exception->getMessage());

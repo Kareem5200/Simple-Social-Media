@@ -24,7 +24,7 @@ class ProfileController extends Controller
     {
         try{
             $profile_owner = new UserResource($this->user_service->getUser($user_id, ['id','name','profile_image','bio']));
-            $profile_content= $this->user_service->getAllPosts($user_id,10,$post_service,$sharedPost_service);
+            $profile_content= $this->user_service->getAllPosts([$user_id],10,$post_service,$sharedPost_service);
 
 
 
