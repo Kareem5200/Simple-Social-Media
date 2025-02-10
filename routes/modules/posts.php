@@ -8,7 +8,7 @@ Route::controller(PostController::class)->group(function(){
 
     Route::post('create-textPost','createTextPost');
     Route::post('create-imagePost','createImagePost');
-    Route::get('get-post/{id}/{notification_id}','getPost');
+    Route::get('get-post/{id}/{notification_id?}','getPost');
     Route::delete('delete-post/{id}','forceDeletePost');
     Route::post('update-textPost/{id}','updateTextPost');
     Route::post('convert-textToImagePost/{id}','convertTextToImagePost');

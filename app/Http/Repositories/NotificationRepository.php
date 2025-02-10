@@ -24,7 +24,7 @@ class NotificationRepository{
         return $this->authUser()->notifications()->where('id',$id)->delete();
     }
     public function first($id){
-        return $notification = $this->authUser()->notifications()->where('id', $id)->first();
+        return $this->authUser()->unreadNotifications()->where('id', $id)->first();
 
     }
 

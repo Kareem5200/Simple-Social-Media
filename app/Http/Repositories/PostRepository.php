@@ -5,6 +5,8 @@ use App\Models\Post;
 use App\Models\User;
 use App\Models\TextPost;
 use App\Models\MediaPost;
+use App\Models\SharedPost;
+use Illuminate\Support\Facades\DB;
 
 class PostRepository{
 
@@ -40,14 +42,6 @@ class PostRepository{
         return  Post::findOrFail($id);
     }
 
-
-
-
-    //All posts for specific user to use in user profile
-    public function getUserPosts(User $user){
-        return $user->posts()->postData()->orderBy('created_at', 'desc')->paginate();
-    }
-
     //Delete post with all comments and likes
     public function forceDeletePost(Post $post){
         return $post->forceDelete();
@@ -69,6 +63,16 @@ class PostRepository{
     public function restoreSoftDeletedPost(Post $post){
         return $post->restore();
     }
+
+
+    public function getUserPosts(array $users_id,$pagination_number){
+
+        return  Post::whereIn('user_id', $users_id)
+            ->postData()
+            ->orderBy('created_at', 'desc')
+            ->paginate($pagination_number);
+
+     }
 
 
 

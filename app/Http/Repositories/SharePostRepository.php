@@ -27,8 +27,11 @@ class SharePostRepository{
         return SharedPost::sharedPostData()->findOrFail($id);
     }
 
-    public function getUserPosts($user_id){
-        return SharedPost::sharedPostData()->where('user_id',$user_id)->get();
+    public function getUserSharedPosts(array $user_id,$pagination_number){
+        return SharedPost::whereIn('user_id',$user_id)
+        ->sharedPostData()
+        ->orderBy('created_at', 'desc')
+        ->paginate($pagination_number);
     }
 
 }

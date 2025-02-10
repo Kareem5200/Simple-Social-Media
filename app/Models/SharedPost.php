@@ -51,7 +51,7 @@ class SharedPost extends Model
         'comments.user:id,name,profile_image',
         'comments.likes',
         'comments.likes.user:id,name,profile_image',
-        'post',
+        'post'
         ])->withCount(['comments','likes']);
     }
 

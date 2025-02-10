@@ -10,29 +10,28 @@ use Exception;
 
 class FriendService{
 
-    public function __construct(public FriendRepository $friend_repository,public UserRepository $user_repository)
+    public function __construct(public FriendRepository $friend_repository)
     {
 
 
     }
 
-    public function addFriend(int $friend_id,$notification_service){
+    public function addFriend(int $friend_id,$user_service,$notification_service){
 
         if(auth()->id() == $friend_id || $this->friend_repository->checkFriendExists($friend_id)){
 
             throw new Exception('Error in friend ID');
         }
 
-        $friend = $this->user_repository->getById($friend_id);
+        $friend = $user_service->getUser($friend_id);
         $this->friend_repository->addFriend($friend_id);
         $notification_service->sendNotificationToUser($friend ,new AddFriendNotification(auth()->user()));
     }
 
-    public function acceptRequest(int $user_id,$notification_id,$notification_service){
+    public function acceptRequest(int $user_id,$user_service,$notification_id,$notification_service){
 
         if($this->friend_repository->checkReceivedRequestExists($user_id)){
-            $user = $this->user_repository->getById($user_id);
-
+            $user =$user_service->getUser($user_id);
 
             if(!$this->friend_repository->acceptRequest($user_id)){
                 throw new Exception('Error in update process');
@@ -58,10 +57,6 @@ class FriendService{
 
 
     public function cancelSentFriendRequest(int $friend_id){
-        // if($this->friend_repository->checkSentRequestExists($friend_id)){
-        //     return $this->friend_repository->cancelSentFriendRequest($friend_id);
-        // }
-        // throw new Exception('Error in user ID');
 
         if(!$this->friend_repository->cancelSentFriendRequest($friend_id)){
             throw new Exception('Error in user ID');
@@ -81,8 +76,8 @@ class FriendService{
 
 
 
-    public function getFriends(int $user_id,$columns = ['id','name','profile_image']){
-        return $this->friend_repository->getFriends($user_id,$columns);
+    public function getFriends(int $user_id,$columns = ['id','name','profile_image'],bool $pluck = false){
+        return $this->friend_repository->getFriends($user_id,$columns,$pluck);
     }
 
     public function getFriendsResource(int $user_id,$columns = ['id','name','profile_image']){

@@ -45,6 +45,7 @@ Route::controller(VerificationController::class)->middleware(['auth','throttle:3
 });
 
 Route::middleware('auth')->group(function(){
+    require __DIR__.'/modules/timeline.php';
     require __DIR__.'/modules/profile.php';
     require __DIR__.'/modules/posts.php';
     require __DIR__.'/modules/likes.php';

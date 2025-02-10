@@ -2,15 +2,14 @@
 
 namespace App\Http\Services;
 
-use App\Http\Repositories\FriendRepository;
 use Exception;
 use App\Models\Post;
-use App\Models\User;
 use App\Models\TextPost;
 use App\Models\MediaPost;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\PostResource;
 use App\Http\Repositories\PostRepository;
+use App\Http\Resources\SharedPostResource;
 use App\Notifications\Post\CreatePostNotification;
 
 class PostService{
@@ -46,22 +45,42 @@ class PostService{
 
     }
 
+
+
+
+
+
+
+
+
+
+
     //get post with all comments and likes
     //receive id to make eager loading to get post and their data
-    public function getPost(int $id , $notification_id ,$notification_service){
-        $notification_service->markAsRead($notification_id);
+    public function getPost(int $id,$notification_id ,$notification_service){
+
+        !$notification_id?:$notification_service->markAsRead($notification_id);
         return new PostResource( $this->post_repository->getPost($id));
     }
 
-    //Add the user posts in resource
-    public function getUserPosts(User $user){
-        return PostResource::collection($this->post_repository->getUserPosts($user));
+    public function getUserPosts(array $users_id,$pagination_number=15){
+
+        $posts = $this->post_repository->getUserPosts($users_id,$pagination_number);
+        return  $posts->isEmpty() ? null :$posts;
     }
 
-    // //Add specific post in resource
-    // public function getPostResource(int $id){
-    //     return new PostResource($this->getPost($id));
-    // }
+    public function mapPaginatedPosts($posts){
+        return $posts->through(function ($post) {
+            return [
+                'type' => 'post',
+                'content' =>new PostResource($post),
+            ];
+        });
+    }
+
+
+
+
 
     public function getPostWithoutData($id,bool $trashed = false){
         if($trashed){
@@ -77,6 +96,17 @@ class PostService{
         $post = $this->getPostWithoutData($post_id);
         return $post->user;
     }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -150,6 +180,14 @@ class PostService{
 
 
     }
+
+
+
+
+
+
+
+
 
 
     //Use Force delete

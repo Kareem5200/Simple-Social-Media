@@ -54,15 +54,23 @@ class SharePostService{
         return new SharedPostResource($this->sharePost_repository->getWithPost($id));
     }
 
-    public function getUserPostsResource($user_id){
 
-        $user_posts = $this->sharePost_repository->getUserPosts($user_id);
 
-        if ($user_posts->isEmpty()) {
-                return null;
-            }
+    public function getSharedPosts(array $user_id,$pagination_number = 15){
 
-        return SharedPostResource::collection($user_posts);
-        }
+        $posts = $this->sharePost_repository->getUserSharedPosts($user_id,$pagination_number);
+        return  $posts->isEmpty() ? null : $posts;
+
+    }
+
+    public function mapPaginatedSharedPosts($posts){
+        return $posts->through(function ($post) {
+            return [
+                'type' => "shared-post",
+                'content' => new SharedPostResource($post),
+            ];
+        });
+    }
+
 
 }

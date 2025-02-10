@@ -57,14 +57,17 @@ class FriendRepository{
                 ->delete();
     }
 
-    public function getFriends($user_id,array $columns){
-       return User::whereHas('addedFriends', function ($query) use ($user_id) {
+    public function getFriends($user_id,array $columns = ['id'] ,bool $pluck = false){
+
+        $query  = User::whereHas('addedFriends', function ($query) use ($user_id) {
             $query->where('friend_id', $user_id);
         })
         ->orWhereHas('receivedFriends', function ($query) use ($user_id) {
             $query->where('user_id', $user_id);
-        })
-        ->get($columns);
+        }) ;
+
+
+        return $pluck ? $query->pluck($columns[0]) : $query->get($columns);
 
     }
 

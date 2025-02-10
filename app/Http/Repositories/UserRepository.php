@@ -1,13 +1,15 @@
 <?php
 namespace App\Http\Repositories;
 
+use App\Models\Post;
 use App\Models\User;
-use CRUDInterface;
+use App\Models\SharedPost;
+use Illuminate\Support\Facades\DB;
 
 class UserRepository{
 
-    public function getById(int $id){
-        return User::findOrFail($id);
+    public function getById(int $id,array $select){
+        return User::select($select)->findOrFail($id);
     }
 
     public function create(array $data){
@@ -17,6 +19,8 @@ class UserRepository{
     public function update(array $data){
         return auth()->user()->update($data);
     }
+
+
 
 
 

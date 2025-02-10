@@ -67,20 +67,20 @@ class SharePostController extends Controller
             return $this->returnData('Success process', $shared_post);
 
         }catch(Exception $exception){
-            
+
             return $this->returnErrorMessage($exception->getMessage());
         }
 
     }
 
-    public function getUserPosts($user_id){
-        try{
-            $shared_posts = $this->sharePost_service->getUserPostsResource($user_id);
-            return $this->returnData('Success process', $shared_posts);
-        }catch(Exception $exception){
-            return $this->returnErrorMessage($exception->getMessage());
-        }
+    // public function getUserPosts($user_id){
+    //     try{
+    //         $shared_posts = $this->sharePost_service->getUserPostsResource($user_id);
+    //         return $this->returnData('Success process', $shared_posts);
+    //     }catch(Exception $exception){
+    //         return $this->returnErrorMessage($exception->getMessage());
+    //     }
 
-    }
+    // }
 
 }

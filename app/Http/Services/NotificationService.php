@@ -53,7 +53,7 @@ class NotificationService{
 
     public function markAsRead($id){
         $notification = $this->notification_repository->first($id);
-        if($notification && $notification->unread()){
+        if($notification){
 
             $this->notification_repository->markAsRead($notification);
         }

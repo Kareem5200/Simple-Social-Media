@@ -66,7 +66,7 @@ class PostController extends Controller
 
 
 
-    public function getPost(NotificationService $notification_service,$id ,$notification_id){
+    public function getPost(NotificationService $notification_service,$id ,$notification_id=null){
 
         try{
 

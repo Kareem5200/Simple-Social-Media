@@ -18,6 +18,7 @@ class UserResource extends JsonResource
             'user_profile'=>url('/api/profile',$this->id),
             'username'=>$this->name,
             'image'=>asset('/storage/profile_images/'.$this->profile_image),
+            'bio'=>isset($this->bio) ?$this->bio:null,
         ];
     }
 }
