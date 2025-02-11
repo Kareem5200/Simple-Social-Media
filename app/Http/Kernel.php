@@ -65,7 +65,6 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'checkPostID'=>\App\Http\Middleware\CheckExistsingPostID::class,
-        'checkPost'=>\App\Http\Middleware\CheckExistsingPost::class,
 
     ];
 }
