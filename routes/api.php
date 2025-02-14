@@ -37,14 +37,12 @@ Route::controller(LoginController::class)->group(function(){
     Route::post('/logout','logout')->middleware('auth');
 });
 
-Route::controller(VerificationController::class)->middleware(['auth','throttle:3,1'])->group(function(){
 
-    Route::get('/verify-send','sentVerificationNotification');
-    Route::get('/verify-mark/{id}/{hash}','verfiy')->middleware('signed')->name('verification.verify');
-
-});
 
 Route::middleware('auth')->group(function(){
+
+
+    require __DIR__.'/modules/verification.php';
     require __DIR__.'/modules/timeline.php';
     require __DIR__.'/modules/profile.php';
     require __DIR__.'/modules/posts.php';

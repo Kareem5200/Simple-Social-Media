@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Services\AuthService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use Exception;
 
 class LoginController extends Controller
 {
@@ -16,12 +17,14 @@ class LoginController extends Controller
 
     public function login(LoginRequest $request){
 
-        if ($token = $this->auth_service->login($request->validated())) {
-
+        try{
+            $token = $this->auth_service->login($request->validated());
             return $this->returnToken('Authentication Successfully ',$token,$this->auth_service->AuthUser());
-        }
 
-        return $this->returnErrorMessage('Invalid Credentials');
+        }catch(Exception $exception){
+            return $this->returnErrorMessage('Invalid Credentials');
+
+        }
     }
 
 

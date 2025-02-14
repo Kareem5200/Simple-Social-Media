@@ -2,41 +2,51 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
+use Exception;
+
+
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\URL;
+use App\Http\Controllers\Controller;
+use App\Http\Services\NotificationService;
+use App\Http\Services\VerificationService;
 
 class VerificationController extends Controller
 {
-    public function sentVerificationNotification(Request $request){
-
-       if($request->user()->hasVerifiedEmail()){
-            return $this->returnErrorMessage('User already verified');
-       }
-
-       $request->user()->sendEmailVerificationNotification();
-
-       return $this->returnSuccessMessage('Check you email for verification process');
-
+    public function __construct(public VerificationService $verification_service){
 
     }
+    public function sentVerificationNotification(Request $request,NotificationService $notification_sevice){
 
-    public function verfiy(Request $request,$id,$hash){
-        
-        if(($id != $request->user()->getKey()) ||sha1($request->user()->getEmailForVerification() != $hash)){
-            return $this->returnErrorMessage('Something wrong');
+
+        try{
+
+            $this->verification_service->sendVerificationNotification($request->user(),$notification_sevice);
+            return $this->returnSuccessMessage('Check your account for verification mail');
+
+        }catch(Exception $exception){
+
+            return $this->returnErrorMessage($exception->getMessage());
+
         }
 
-        if($request->user()->hasVerifiedEmail()){
-            return $this->returnErrorMessage('User already verified');
-       }
 
-       if($request->user()->markEmailAsVerified()){
-        return $this->returnSuccessMessage('User Verified successfully');
-       }
-
-       return $this->returnErrorMessage('Something wrong');
 
     }
+
+    public function verify(Request $request,$id,$hash){
+
+        try{
+            $this->verification_service->verify($request->user() ,$id ,$hash);
+            return $this->returnSuccessMessage('Your email is verified');
+        }catch(Exception $exception){
+
+            return $this->returnErrorMessage($exception->getMessage());
+        }
+
+    }
+
+
 
 
 }

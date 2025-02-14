@@ -32,7 +32,7 @@ class UserService{
 
         $data = checkUploadedFile($data,'profile_image','/public/profile_images');
         if(!$data){
-            return false;
+            throw new Exception('error in uploading image');
         }
 
         return  new UserResource($this->user_repository->create($data));

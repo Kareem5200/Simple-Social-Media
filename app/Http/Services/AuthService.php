@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Services;
 
+use Exception;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
 
@@ -8,7 +9,7 @@ class AuthService{
 
     public function login($credentials){
         if(!$token = Auth::attempt($credentials)){
-            return false;
+            throw new Exception('error in token please try again');
         }
         return $token;
     }

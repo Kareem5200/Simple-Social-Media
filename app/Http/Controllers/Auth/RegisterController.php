@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Http\Services\AuthService;
 use App\Http\Services\UserService;
+use Exception;
 
 class RegisterController extends Controller
 {
@@ -16,16 +17,17 @@ class RegisterController extends Controller
 
     public function register(RegisterRequest $request){
 
-        if(!$user = $this->user_service->create($request->validated())){
-            $this->returnErrorMessage('something wrong');
-        };
-
-        if ($token = $this->auth_service->login($request->only('email','password'))) {
-
+        try{
+            $user = $this->user_service->create($request->validated());
+            $token = $this->auth_service->login($request->only('email','password'));
             return $this->returnToken('User successfully Registered ',$token,$user);
-        }
 
-        return $this->returnErrorMessage('something wrong');
+
+        }catch(Exception $exception){
+            return $this->returnErrorMessage($exception->getMessage());
+
+
+        }
     }
 
 
